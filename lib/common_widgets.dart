@@ -1,7 +1,7 @@
 library common_widgets;
 
-/// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
-}
+export '_msgbox.dart';
+export '_loading.dart';
+export '_fixed_panel.dart';
+export '_my_dialog.dart';
+export '_show_snack_bar.dart';
