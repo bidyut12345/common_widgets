@@ -39,61 +39,58 @@ msgBoxOkOnly({required BuildContext context, required String title, required Str
   showDialog(
       context: context,
       builder: (cnt) {
-        return Container(
-          // constraints: BoxConstraints(maxWidth: message.length < 200 ? 200 : double.infinity),
-          child: AlertDialog(
-            contentPadding: EdgeInsets.zero,
-            clipBehavior: Clip.antiAlias,
-            content: FixedPanelTop(
-              topPanelHeight: 57,
-              topChild: AppBar(
-                title: Text(title),
-                automaticallyImplyLeading: false,
-              ),
-              child: FixedPanelBottom(
-                child: Scrollbar(
-                  isAlwaysShown: true,
+        return AlertDialog(
+          contentPadding: EdgeInsets.zero,
+          clipBehavior: Clip.antiAlias,
+          content: FixedPanelTop(
+            topPanelHeight: 57,
+            topChild: AppBar(
+              title: Text(title),
+              automaticallyImplyLeading: false,
+            ),
+            child: FixedPanelBottom(
+              child: Scrollbar(
+                isAlwaysShown: true,
+                controller: sc,
+                child: SingleChildScrollView(
                   controller: sc,
-                  child: SingleChildScrollView(
-                    controller: sc,
-                    child: Container(
-                      color: Colors.black.withOpacity(0.1),
-                      constraints: BoxConstraints(minHeight: 100),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                message,
-                                textAlign: TextAlign.center,
-                              ),
+                  child: Container(
+                    color: Colors.black.withOpacity(0.1),
+                    constraints: BoxConstraints(minHeight: 100),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              message,
+                              textAlign: TextAlign.center,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 ),
-                bottomPanelHeight: 60,
-                bottomChild: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text("Ok"),
-                        ),
-                      )
-                    ],
-                  ),
+              ),
+              bottomPanelHeight: 60,
+              bottomChild: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("Ok"),
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),
