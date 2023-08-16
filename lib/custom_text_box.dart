@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'globals.dart';
 import 'input_formatters/money_formatter.dart';
+import 'package:flutter/scheduler.dart';
+import 'dart:async';
 
 class CustomTextbox extends StatefulWidget {
   const CustomTextbox({
@@ -33,6 +35,14 @@ class CustomTextbox extends StatefulWidget {
 
 class _CustomTextboxState extends State<CustomTextbox> {
   FocusNode fc = FocusNode();
+  // bool isDarkMode = false;
+  @override
+  void initState() {
+    super.initState();
+    // isDarkMode = SchedulerBinding.instance.window.platformBrightness;
+    // Timer.run(() async {});
+    // isDarkMode = Theme.of(context).brightness == Brightness.dark;
+  }
 
   // final void Function(String) onChanged;
   @override
@@ -45,7 +55,11 @@ class _CustomTextboxState extends State<CustomTextbox> {
           child: RichText(
             textAlign: TextAlign.left,
             text: TextSpan(
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 86, 86, 86)),
+              style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color:
+                      Theme.of(context).brightness == Brightness.dark ? Colors.white : Color.fromARGB(255, 86, 86, 86)),
               children: [
                 TextSpan(
                   text: widget.labelText,
@@ -86,17 +100,19 @@ class _CustomTextboxState extends State<CustomTextbox> {
             }
           },
           textCapitalization: widget.capitalization,
-          style: const TextStyle(fontSize: 14, color: Color.fromARGB(255, 71, 71, 71)),
+          style: TextStyle(
+              fontSize: 14,
+              color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Color.fromARGB(255, 71, 71, 71)),
           maxLines: widget.multiline ? 4 : 1,
           minLines: widget.multiline ? 4 : 1,
           decoration: InputDecoration(
             hintText: widget.hintText,
             hintStyle: const TextStyle(color: Color.fromARGB(255, 192, 192, 192)),
-            fillColor: Colors.white,
+            fillColor: Theme.of(context).brightness == Brightness.dark ? Colors.black : Colors.white,
             filled: true,
             enabledBorder: const OutlineInputBorder(
               borderRadius: BorderRadius.all(
-                Radius.circular(15),
+                Radius.circular(10),
               ),
               borderSide: BorderSide(
                 width: 0.1,
@@ -105,7 +121,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
             ),
             border: const OutlineInputBorder(
               borderRadius: BorderRadius.all(
-                Radius.circular(15),
+                Radius.circular(10),
               ),
               borderSide: BorderSide(
                 width: 0.1,
@@ -114,7 +130,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
             ),
             focusedBorder: const OutlineInputBorder(
               borderRadius: BorderRadius.all(
-                Radius.circular(15),
+                Radius.circular(10),
               ),
               borderSide: BorderSide(
                 width: 0.1,

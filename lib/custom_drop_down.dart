@@ -141,8 +141,12 @@ class _CustomDropDownState extends State<CustomDropDown> {
           child: RichText(
             textAlign: TextAlign.left,
             text: TextSpan(
-              style:
-                  const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 139, 139, 139)),
+              style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : Color.fromARGB(255, 139, 139, 139)),
               children: [
                 TextSpan(
                   text: widget.labelText,
@@ -165,16 +169,18 @@ class _CustomDropDownState extends State<CustomDropDown> {
           decoration: BoxDecoration(
             border: Border.all(
               width: 0.1,
-              color: Colors.grey,
+              color: Theme.of(context).brightness == Brightness.dark ? Colors.black : Colors.grey,
               // color: Colors.red,
             ),
-            gradient: const LinearGradient(
+            gradient: LinearGradient(
                 // colors: [Color.fromARGB(255, 235, 234, 234), Color.fromARGB(255, 182, 181, 181), Color.fromARGB(255, 167, 166, 166)],
-                colors: [
-                  Color.fromARGB(255, 238, 237, 237),
-                  Color.fromARGB(255, 230, 229, 229),
-                  Color.fromARGB(255, 226, 228, 236)
-                ],
+                colors: Theme.of(context).brightness == Brightness.dark
+                    ? [Color.fromARGB(255, 12, 12, 12), Color.fromARGB(255, 0, 0, 0), Color.fromARGB(255, 0, 0, 0)]
+                    : [
+                        Color.fromARGB(255, 238, 237, 237),
+                        Color.fromARGB(255, 230, 229, 229),
+                        Color.fromARGB(255, 226, 228, 236)
+                      ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter),
             borderRadius: BorderRadius.circular(10),
@@ -185,6 +191,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
             focusColor: Colors.red,
             isExpanded: true,
             borderRadius: BorderRadius.circular(10),
+            style: TextStyle(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black),
             decoration: const InputDecoration(
               enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.transparent, width: 0)),
               focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.transparent, width: 0)),
