@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import '_fixed_panel.dart';
+import 'fixed_panel.dart';
 
-msgBox({required String title, required String message, required Map<String, IconData> buttons, required BuildContext context}) {
+msgBox(
+    {required String title,
+    required String message,
+    required Map<String, IconData> buttons,
+    required BuildContext context}) {
   // Widget okButton = ElevatedButton.icon(
   //   icon: const Icon(Icons.keyboard_option_key),
   //   label: const Text("YES"),
