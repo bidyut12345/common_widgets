@@ -4,7 +4,7 @@ Future showConfirmMessageBox(
   BuildContext context,
   String message, {
   String title = "",
-  IconData icon = Icons.question_mark_outlined,
+  IconData icon = Icons.question_answer_outlined,
   String button1 = "Yes",
   String button2 = "No",
   String button3 = "",
@@ -14,21 +14,20 @@ Future showConfirmMessageBox(
       builder: (cntxt) {
         return AlertDialog(
           scrollable: true,
+          clipBehavior: Clip.antiAlias,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-          icon: Icon(
-            icon,
-            size: 50,
-          ),
-          title: title.isEmpty
-              ? null
-              : Text(
-                  title,
-                  textAlign: TextAlign.center,
-                ),
+          // icon: Icon(
+          //   icon,
+          //   size: 50,
+          // ),
+          // backgroundColor: Colors.redAccent,
+          backgroundColor: Color.fromARGB(255, 36, 36, 36),
+
           actionsAlignment: MainAxisAlignment.center,
-          actionsPadding: const EdgeInsets.only(left: 20, right: 20, bottom: 30, top: 5),
+          actionsPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           actions: [
             ElevatedButton(
+              autofocus: true,
               onPressed: () {
                 Navigator.pop(context, button1);
               },
@@ -38,7 +37,6 @@ Future showConfirmMessageBox(
               ),
             ),
             ElevatedButton(
-              autofocus: true,
               onPressed: () {
                 Navigator.pop(context, button2);
               },
@@ -55,12 +53,47 @@ Future showConfirmMessageBox(
                 child: Text(button3),
               )
             ],
+            // const SizedBox(width: 20),
           ],
-          content: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-            child: Text(
-              message,
-              textAlign: TextAlign.center,
+          contentPadding: EdgeInsets.zero,
+          content: Container(
+            color: Colors.black45,
+            child: Column(
+              children: [
+                if (title.isNotEmpty) ...[
+                  Container(
+                    color: const Color.fromARGB(255, 78, 78, 78),
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: Text(
+                            title,
+                            textScaleFactor: 1.5,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                    child: Text(
+                      message,
+                      textAlign: TextAlign.center,
+                      textScaleFactor: 1.5,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         );

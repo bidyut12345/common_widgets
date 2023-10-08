@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+import 'common_widget_config.dart';
 import 'globals.dart';
 import 'input_formatters/money_formatter.dart';
-import 'package:flutter/scheduler.dart';
-import 'dart:async';
 
 class CustomTextbox extends StatefulWidget {
   const CustomTextbox({
@@ -15,7 +16,14 @@ class CustomTextbox extends StatefulWidget {
     this.required = true,
     this.obsecureText = false,
     this.multiline = false,
+    this.endPadding = 5,
+    this.readOnly = false,
+    this.autoFocus = false,
+    this.showLabel = true,
+    this.textAlign = TextAlign.left,
+    this.disableSuffixButtonClick = false,
     this.isMoneyFormatter = false,
+
     // required this.onChanged,
   });
 
@@ -27,22 +35,19 @@ class CustomTextbox extends StatefulWidget {
   final bool required;
   final bool obsecureText;
   final bool multiline;
+  final double endPadding;
+  final bool readOnly;
+  final TextAlign textAlign;
+  final bool autoFocus;
+  final bool showLabel;
+  final bool disableSuffixButtonClick;
   final bool isMoneyFormatter;
-
   @override
   State<CustomTextbox> createState() => _CustomTextboxState();
 }
 
 class _CustomTextboxState extends State<CustomTextbox> {
   FocusNode fc = FocusNode();
-  // bool isDarkMode = false;
-  @override
-  void initState() {
-    super.initState();
-    // isDarkMode = SchedulerBinding.instance.window.platformBrightness;
-    // Timer.run(() async {});
-    // isDarkMode = Theme.of(context).brightness == Brightness.dark;
-  }
 
   // final void Function(String) onChanged;
   @override
@@ -50,40 +55,50 @@ class _CustomTextboxState extends State<CustomTextbox> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-          child: RichText(
-            textAlign: TextAlign.left,
-            text: TextSpan(
-              style: TextStyle(
+        if (widget.showLabel) ...[
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            child: RichText(
+              textAlign: TextAlign.left,
+              text: TextSpan(
+                style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
-                  color:
-                      Theme.of(context).brightness == Brightness.dark ? Colors.white : Color.fromARGB(255, 86, 86, 86)),
-              children: [
-                TextSpan(
-                  text: widget.labelText,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Color.fromARGB(255, 209, 209, 209)
+                      : Color.fromARGB(255, 86, 86, 86),
+                  // color: Color.fromARGB(255, 86, 86, 86),
                 ),
-                TextSpan(
-                  text: widget.required ? " *" : "",
-                  style: TextStyle(
-                    color: Colors.red[700],
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
+                children: [
+                  TextSpan(
+                    text: widget.labelText,
                   ),
-                )
-              ],
+                  TextSpan(
+                    text: widget.required ? " *" : "",
+                    style: TextStyle(
+                      color: Colors.red[700],
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
-        ),
-        const SizedBox(height: 5),
+          const SizedBox(height: 3),
+        ],
         TextFormField(
+          autofocus: widget.autoFocus,
           focusNode: fc,
+          readOnly: widget.readOnly,
           controller: widget.controller,
           keyboardType: widget.multiline ? TextInputType.multiline : widget.keyboardtype,
           textInputAction: widget.multiline ? TextInputAction.newline : TextInputAction.next,
           obscureText: widget.obsecureText,
           inputFormatters: widget.isMoneyFormatter ? [MoneyTextInputFormatter()] : null,
+          minLines: widget.multiline ? 2 : 1,
+          maxLines: widget.multiline ? 5 : 1,
+          textAlign: widget.textAlign,
           validator: (value) {
             if (widget.required) {
               if ((value ?? "").trim().isEmpty) {
@@ -102,17 +117,53 @@ class _CustomTextboxState extends State<CustomTextbox> {
           textCapitalization: widget.capitalization,
           style: TextStyle(
               fontSize: 14,
-              color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Color.fromARGB(255, 71, 71, 71)),
-          maxLines: widget.multiline ? 4 : 1,
-          minLines: widget.multiline ? 4 : 1,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Color.fromARGB(255, 218, 218, 218)
+                  : Color.fromARGB(255, 71, 71, 71)),
           decoration: InputDecoration(
+            // isDense: true,
+            suffixIconConstraints: const BoxConstraints(maxHeight: 35, maxWidth: 45),
+
+            suffixIcon: widget.keyboardtype == TextInputType.datetime
+                ? Material(
+                    color: Colors.transparent,
+                    child: Center(
+                      child: IconButton(
+                        enableFeedback: !widget.disableSuffixButtonClick,
+                        icon: const Icon(
+                          Icons.calendar_month,
+                          color: Colors.blue,
+                          size: 20,
+                        ),
+                        onPressed: () {
+                          if (widget.disableSuffixButtonClick) return;
+                          showDatePicker(
+                            initialEntryMode: DatePickerEntryMode.calendarOnly,
+                            context: context,
+                            initialDate: widget.controller.text.trim() != ''
+                                ? DateFormat(CommonWidgetConfig.dateFormatString).parse(widget.controller.text)
+                                : DateTime.now(),
+                            firstDate: DateTime(2000),
+                            lastDate: DateTime(2100),
+                          ).then((value) {
+                            if (value != null)
+                              widget.controller.text = DateFormat(CommonWidgetConfig.dateFormatString).format(value);
+                          });
+                        },
+                      ),
+                    ),
+                  )
+                : null,
+
             hintText: widget.hintText,
-            hintStyle: const TextStyle(color: Color.fromARGB(255, 192, 192, 192)),
-            fillColor: Theme.of(context).brightness == Brightness.dark ? Colors.black : Colors.white,
+            hintStyle: const TextStyle(color: Color.fromARGB(255, 108, 108, 108)),
+            fillColor: Theme.of(context).brightness == Brightness.dark ? Color.fromARGB(255, 69, 69, 69) : Colors.white,
             filled: true,
+            isCollapsed: true,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
             enabledBorder: const OutlineInputBorder(
               borderRadius: BorderRadius.all(
-                Radius.circular(10),
+                Radius.circular(5),
               ),
               borderSide: BorderSide(
                 width: 0.1,
@@ -121,7 +172,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
             ),
             border: const OutlineInputBorder(
               borderRadius: BorderRadius.all(
-                Radius.circular(10),
+                Radius.circular(5),
               ),
               borderSide: BorderSide(
                 width: 0.1,
@@ -130,16 +181,16 @@ class _CustomTextboxState extends State<CustomTextbox> {
             ),
             focusedBorder: const OutlineInputBorder(
               borderRadius: BorderRadius.all(
-                Radius.circular(10),
+                Radius.circular(5),
               ),
               borderSide: BorderSide(
-                width: 0.1,
-                color: Colors.grey,
+                width: 1,
+                color: Color.fromARGB(255, 148, 148, 148),
               ),
             ),
           ),
         ),
-        const SizedBox(height: 15),
+        SizedBox(height: widget.endPadding),
       ],
     );
   }

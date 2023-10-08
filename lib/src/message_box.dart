@@ -13,9 +13,10 @@ Future showMessageBox(
           scrollable: true,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
           actionsAlignment: MainAxisAlignment.center,
+          // buttonPadding: EdgeInsets.only(bottom: 20),
           actions: [
             Padding(
-              padding: const EdgeInsets.only(bottom: 15.0),
+              padding: const EdgeInsets.only(bottom: 20),
               child: ElevatedButton(
                   autofocus: true,
                   onPressed: () => Navigator.pop(context),

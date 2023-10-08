@@ -17,7 +17,7 @@ class CustomHomeItemButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
           // foregroundColor: Colors.indigo[900],
           elevation: 20,
-          backgroundColor: const Color.fromARGB(255, 148, 153, 223),
+          backgroundColor: const Color.fromARGB(255, 99, 103, 154),
           minimumSize: const Size(double.infinity, 60),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25))
           // shape:

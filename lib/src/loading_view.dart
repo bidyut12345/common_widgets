@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'controller/loading_controller.dart';
 import 'package:provider/provider.dart';
+
+import '../common_widgets.dart';
 
 class LoadingWidget extends StatelessWidget {
   const LoadingWidget({Key? key, required this.child, this.fit = StackFit.expand}) : super(key: key);
