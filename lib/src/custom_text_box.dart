@@ -54,6 +54,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
         if (widget.showLabel) ...[
           Padding(

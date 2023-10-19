@@ -36,6 +36,7 @@ class CustomDropDown extends StatefulWidget {
     this.controller,
     this.required = true,
     this.autoFocus = false,
+    this.endPadding = 5.0,
     this.onChanged,
     this.defaultValue,
     this.showLabel = true,
@@ -52,6 +53,7 @@ class CustomDropDown extends StatefulWidget {
   final bool autoFocus;
   final String? defaultValue;
   final bool showLabel;
+  final double endPadding;
 
   final Function(String value, String text)? onChanged;
 
@@ -166,6 +168,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
         : Color.fromARGB(255, 86, 86, 86);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
         if (widget.showLabel) ...[
           Padding(
@@ -307,7 +310,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
             },
           ),
         ),
-        const SizedBox(height: 5),
+        SizedBox(height: widget.endPadding),
       ],
     );
   }
