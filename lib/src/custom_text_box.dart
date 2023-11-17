@@ -23,6 +23,7 @@ class CustomTextbox extends StatefulWidget {
     this.textAlign = TextAlign.left,
     this.disableSuffixButtonClick = false,
     this.isMoneyFormatter = false,
+    this.suffixIcon,
 
     // required this.onChanged,
   });
@@ -42,6 +43,7 @@ class CustomTextbox extends StatefulWidget {
   final bool showLabel;
   final bool disableSuffixButtonClick;
   final bool isMoneyFormatter;
+  final Widget? suffixIcon;
   @override
   State<CustomTextbox> createState() => _CustomTextboxState();
 }
@@ -125,36 +127,38 @@ class _CustomTextboxState extends State<CustomTextbox> {
             // isDense: true,
             suffixIconConstraints: const BoxConstraints(maxHeight: 35, maxWidth: 45),
 
-            suffixIcon: widget.keyboardtype == TextInputType.datetime
-                ? Material(
-                    color: Colors.transparent,
-                    child: Center(
-                      child: IconButton(
-                        enableFeedback: !widget.disableSuffixButtonClick,
-                        icon: const Icon(
-                          Icons.calendar_month,
-                          color: Colors.blue,
-                          size: 20,
+            suffixIcon: widget.suffixIcon ??
+                (widget.keyboardtype == TextInputType.datetime
+                    ? Material(
+                        color: Colors.transparent,
+                        child: Center(
+                          child: IconButton(
+                            enableFeedback: !widget.disableSuffixButtonClick,
+                            icon: const Icon(
+                              Icons.calendar_month,
+                              color: Colors.blue,
+                              size: 20,
+                            ),
+                            onPressed: () {
+                              if (widget.disableSuffixButtonClick) return;
+                              showDatePicker(
+                                initialEntryMode: DatePickerEntryMode.calendarOnly,
+                                context: context,
+                                initialDate: widget.controller.text.trim() != ''
+                                    ? DateFormat(CommonWidgetConfig.dateFormatString).parse(widget.controller.text)
+                                    : DateTime.now(),
+                                firstDate: DateTime(2000),
+                                lastDate: DateTime(2100),
+                              ).then((value) {
+                                if (value != null)
+                                  widget.controller.text =
+                                      DateFormat(CommonWidgetConfig.dateFormatString).format(value);
+                              });
+                            },
+                          ),
                         ),
-                        onPressed: () {
-                          if (widget.disableSuffixButtonClick) return;
-                          showDatePicker(
-                            initialEntryMode: DatePickerEntryMode.calendarOnly,
-                            context: context,
-                            initialDate: widget.controller.text.trim() != ''
-                                ? DateFormat(CommonWidgetConfig.dateFormatString).parse(widget.controller.text)
-                                : DateTime.now(),
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime(2100),
-                          ).then((value) {
-                            if (value != null)
-                              widget.controller.text = DateFormat(CommonWidgetConfig.dateFormatString).format(value);
-                          });
-                        },
-                      ),
-                    ),
-                  )
-                : null,
+                      )
+                    : null),
 
             hintText: widget.hintText,
             hintStyle: const TextStyle(color: Color.fromARGB(255, 108, 108, 108)),
