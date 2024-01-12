@@ -73,6 +73,7 @@ msgBoxOkOnly({required BuildContext context, required String title, required Str
               ),
               child: Scrollbar(
                 // isAlwaysShown: true,
+                thumbVisibility: true,
                 controller: sc,
                 child: SingleChildScrollView(
                   controller: sc,
@@ -105,7 +106,7 @@ msgBoxOkOnly({required BuildContext context, required String title, required Str
   });
 }
 
-Future<dynamic?> msgBoxOkOnlyFuture({required BuildContext context, required String title, required String message}) {
+Future<dynamic> msgBoxOkOnlyFuture({required BuildContext context, required String title, required String message}) {
   var sc = ScrollController();
   return showDialog(
       context: context,
@@ -140,6 +141,7 @@ Future<dynamic?> msgBoxOkOnlyFuture({required BuildContext context, required Str
               ),
               child: Scrollbar(
                 // isAlwaysShown: true,
+                thumbVisibility: true,
                 controller: sc,
                 child: SingleChildScrollView(
                   controller: sc,
