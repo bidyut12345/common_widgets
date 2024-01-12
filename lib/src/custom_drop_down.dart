@@ -163,9 +163,9 @@ class _CustomDropDownState extends State<CustomDropDown> {
 
   @override
   Widget build(BuildContext context) {
-    Color borderColor = Theme.of(context).brightness == Brightness.dark
-        ? Color.fromARGB(255, 209, 209, 209)
-        : Color.fromARGB(255, 86, 86, 86);
+    // Color borderColor = Theme.of(context).brightness == Brightness.dark
+    //     ? Color.fromARGB(255, 209, 209, 209)
+    //     : Color.fromARGB(255, 86, 86, 86);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -180,8 +180,8 @@ class _CustomDropDownState extends State<CustomDropDown> {
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).brightness == Brightness.dark
-                      ? Color.fromARGB(255, 209, 209, 209)
-                      : Color.fromARGB(255, 86, 86, 86),
+                      ? const Color.fromARGB(255, 209, 209, 209)
+                      : const Color.fromARGB(255, 86, 86, 86),
                 ),
                 children: [
                   TextSpan(

@@ -53,14 +53,32 @@ msgBoxOkOnly({required BuildContext context, required String title, required Str
               automaticallyImplyLeading: false,
             ),
             child: FixedPanelBottom(
+              bottomPanelHeight: 60,
+              bottomChild: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text("Ok"),
+                      ),
+                    )
+                  ],
+                ),
+              ),
               child: Scrollbar(
-                isAlwaysShown: true,
+                // isAlwaysShown: true,
                 controller: sc,
                 child: SingleChildScrollView(
                   controller: sc,
                   child: Container(
                     color: Colors.black.withOpacity(0.1),
-                    constraints: BoxConstraints(minHeight: 100),
+                    constraints: const BoxConstraints(minHeight: 100),
                     child: Padding(
                       padding: const EdgeInsets.all(10),
                       child: Row(
@@ -77,24 +95,6 @@ msgBoxOkOnly({required BuildContext context, required String title, required Str
                       ),
                     ),
                   ),
-                ),
-              ),
-              bottomPanelHeight: 60,
-              bottomChild: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text("Ok"),
-                      ),
-                    )
-                  ],
                 ),
               ),
             ),
@@ -120,14 +120,32 @@ Future<dynamic?> msgBoxOkOnlyFuture({required BuildContext context, required Str
               automaticallyImplyLeading: false,
             ),
             child: FixedPanelBottom(
+              bottomPanelHeight: 60,
+              bottomChild: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text("Ok"),
+                      ),
+                    )
+                  ],
+                ),
+              ),
               child: Scrollbar(
-                isAlwaysShown: true,
+                // isAlwaysShown: true,
                 controller: sc,
                 child: SingleChildScrollView(
                   controller: sc,
                   child: Container(
                     color: Colors.black.withOpacity(0.1),
-                    constraints: BoxConstraints(minHeight: 100),
+                    constraints: const BoxConstraints(minHeight: 100),
                     child: Padding(
                       padding: const EdgeInsets.all(10),
                       child: Row(
@@ -144,24 +162,6 @@ Future<dynamic?> msgBoxOkOnlyFuture({required BuildContext context, required Str
                       ),
                     ),
                   ),
-                ),
-              ),
-              bottomPanelHeight: 60,
-              bottomChild: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text("Ok"),
-                      ),
-                    )
-                  ],
                 ),
               ),
             ),
