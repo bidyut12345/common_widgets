@@ -72,7 +72,7 @@ msgBoxOkOnly({required BuildContext context, required String title, required Str
                 ),
               ),
               child: Scrollbar(
-                // isAlwaysShown: true,
+                // isAlwaysShown: true ,
                 thumbVisibility: true,
                 controller: sc,
                 child: SingleChildScrollView(
