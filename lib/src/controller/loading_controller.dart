@@ -21,5 +21,13 @@ class LoadingController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void resetLoading() {
+    loadingCount = 0;
+    isLoading = false;
+    print("reset$loadingCount");
+    loadingText = "";
+    notifyListeners();
+  }
+
   static LoadingController? instance;
 }
