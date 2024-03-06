@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'globals.dart';
 
 class DropDownController extends TextEditingController {
@@ -41,7 +42,7 @@ class CustomDropDown extends StatefulWidget {
     this.defaultValue,
     this.showLabel = true,
     this.wrongValues,
-    this.allowMultiSelect = false,
+    this.multiSelect = false,
   });
 
   final DropDownController? controller;
@@ -55,7 +56,7 @@ class CustomDropDown extends StatefulWidget {
   final String? defaultValue;
   final bool showLabel;
   final double endPadding;
-  final bool allowMultiSelect;
+  final bool multiSelect;
 
   final Function(String value, String text)? onChanged;
 
@@ -278,18 +279,34 @@ class _CustomDropDownState extends State<CustomDropDown> {
             // underline: Container(),
             items: widget.datasourc
                 .map((e) => DropdownMenuItem(
+                      // onTap: () {
+                      //   bool value = !selectedItems.contains(e[widget.valueMember]?.toString() ?? "");
+                      //   selectedItems.removeWhere((element) => element == (e[widget.valueMember]?.toString() ?? ""));
+                      //   if (value) {
+                      //     selectedItems.add(e[widget.valueMember]?.toString() ?? "");
+                      //   }
+                      //   print(selectedItems);
+                      // },
                       value: e[widget.valueMember]?.toString() ?? "",
                       child: Row(
                         children: [
-                          Checkbox(
-                              value: selectedItems.contains(e[widget.valueMember]?.toString() ?? ""),
-                              onChanged: (value) {
-                                selectedItems
-                                    .removeWhere((element) => element == (e[widget.valueMember]?.toString() ?? ""));
-                                if (value) {
-                                  selectedItems.add(e[widget.valueMember]?.toString() ?? "");
-                                }
-                              }),
+                          if (widget.multiSelect)
+                            StatefulBuilder(builder: (context, setState2) {
+                              return Checkbox(
+                                  value: selectedItems.contains(e[widget.valueMember]?.toString() ?? ""),
+                                  onChanged: (value) {
+                                    selectedItems
+                                        .removeWhere((element) => element == (e[widget.valueMember]?.toString() ?? ""));
+                                    if (value ?? false) {
+                                      selectedItems.add(e[widget.valueMember]?.toString() ?? "");
+                                    }
+                                    if (widget.onChanged != null) {
+                                      widget.onChanged!(selectedValue, selectedText);
+                                    }
+                                    setState2(() {});
+                                    print(selectedItems);
+                                  });
+                            }),
                           Expanded(
                               child: Text(
                             e[widget.displayMember]?.toString() ?? "",
@@ -302,28 +319,33 @@ class _CustomDropDownState extends State<CustomDropDown> {
                       ),
                     ))
                 .toList(),
-            value: widget.datasourc.where((element) => element[widget.valueMember].toString() == selectedValue).isEmpty
+            value: widget.multiSelect
                 ? widget.datasourc.first[widget.valueMember]?.toString() ?? ""
-                : selectedValue,
+                : widget.datasourc.where((element) => element[widget.valueMember].toString() == selectedValue).isEmpty
+                    ? widget.datasourc.first[widget.valueMember]?.toString() ?? ""
+                    : selectedValue,
 
             onChanged: (value) {
-              selectedValue = value.toString();
-              selectedText = widget.datasourc
-                      .where((element) => element[widget.valueMember].toString() == selectedValue)
-                      .first[widget.displayMember]
-                      ?.toString() ??
-                  "";
+              if (!widget.multiSelect) {
+                selectedValue = value.toString();
+                selectedText = widget.datasourc
+                        .where((element) => element[widget.valueMember].toString() == selectedValue)
+                        .first[widget.displayMember]
+                        ?.toString() ??
+                    "";
 
-              if (widget.controller != null) {
-                if (selectedValue != widget.controller!.selectedValue && widget.controller!.selectedValue.isNotEmpty) {
-                  widget.controller!.text = selectedText;
-                  widget.controller!.selectedValue = selectedValue;
+                if (widget.controller != null) {
+                  if (selectedValue != widget.controller!.selectedValue &&
+                      widget.controller!.selectedValue.isNotEmpty) {
+                    widget.controller!.text = selectedText;
+                    widget.controller!.selectedValue = selectedValue;
+                  }
                 }
+                if (mounted) setState(() {});
               }
               if (widget.onChanged != null) {
                 widget.onChanged!(selectedValue, selectedText);
               }
-              if (mounted) setState(() {});
             },
           ),
         ),
