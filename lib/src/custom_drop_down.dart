@@ -41,6 +41,7 @@ class CustomDropDown extends StatefulWidget {
     this.defaultValue,
     this.showLabel = true,
     this.wrongValues,
+    this.allowMultiSelect = false,
   });
 
   final DropDownController? controller;
@@ -54,6 +55,7 @@ class CustomDropDown extends StatefulWidget {
   final String? defaultValue;
   final bool showLabel;
   final double endPadding;
+  final bool allowMultiSelect;
 
   final Function(String value, String text)? onChanged;
 
@@ -65,6 +67,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
   FocusNode fc = FocusNode();
   String selectedValue = "";
   String selectedText = "";
+  List<String> selectedItems = [];
   @override
   void initState() {
     super.initState();
@@ -276,12 +279,26 @@ class _CustomDropDownState extends State<CustomDropDown> {
             items: widget.datasourc
                 .map((e) => DropdownMenuItem(
                       value: e[widget.valueMember]?.toString() ?? "",
-                      child: Text(
-                        e[widget.displayMember]?.toString() ?? "",
-                        style: TextStyle(
-                          color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
-                          fontSize: 14,
-                        ),
+                      child: Row(
+                        children: [
+                          Checkbox(
+                              value: selectedItems.contains(e[widget.valueMember]?.toString() ?? ""),
+                              onChanged: (value) {
+                                selectedItems
+                                    .removeWhere((element) => element == (e[widget.valueMember]?.toString() ?? ""));
+                                if (value) {
+                                  selectedItems.add(e[widget.valueMember]?.toString() ?? "");
+                                }
+                              }),
+                          Expanded(
+                              child: Text(
+                            e[widget.displayMember]?.toString() ?? "",
+                            style: TextStyle(
+                              color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
+                              fontSize: 14,
+                            ),
+                          ))
+                        ],
                       ),
                     ))
                 .toList(),
