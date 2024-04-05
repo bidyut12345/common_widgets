@@ -144,11 +144,20 @@ class _CustomTextboxState extends State<CustomTextbox> {
                               showDatePicker(
                                 initialEntryMode: DatePickerEntryMode.calendarOnly,
                                 context: context,
+                                currentDate: DateTime.now(),
                                 initialDate: widget.controller.text.trim() != ''
                                     ? DateFormat(CommonWidgetConfig.dateFormatString).parse(widget.controller.text)
                                     : DateTime.now(),
                                 firstDate: DateTime(2000),
                                 lastDate: DateTime(2100),
+                                builder: (context, child) {
+                                  return Column(
+                                    children: [
+                                      child ?? Container(),
+                                      ElevatedButton(onPressed: () {}, child: Text("Now"))
+                                    ],
+                                  );
+                                },
                               ).then((value) {
                                 if (value != null)
                                   widget.controller.text =
