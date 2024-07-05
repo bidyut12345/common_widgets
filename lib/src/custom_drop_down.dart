@@ -30,7 +30,7 @@ class DropDownController extends TextEditingController {
 class CustomDropDown extends StatefulWidget {
   const CustomDropDown({
     super.key,
-    required this.datasourc,
+    required this.datasource,
     required this.displayMember,
     required this.valueMember,
     required this.labelText,
@@ -46,7 +46,7 @@ class CustomDropDown extends StatefulWidget {
   });
 
   final DropDownController? controller;
-  final List<Map<String, dynamic>> datasourc;
+  final List<Map<String, dynamic>> datasource;
   final String displayMember;
   final String valueMember;
   final String labelText;
@@ -79,19 +79,19 @@ class _CustomDropDownState extends State<CustomDropDown> {
       loadvalue();
     };
     widget.controller?.selectItem = (int index) {
-      selectedValue = widget.datasourc[index][widget.valueMember]?.toString() ?? "";
-      selectedText = widget.datasourc[index][widget.displayMember]?.toString() ?? "";
+      selectedValue = widget.datasource[index][widget.valueMember]?.toString() ?? "";
+      selectedText = widget.datasource[index][widget.displayMember]?.toString() ?? "";
       widget.controller?.text = selectedText;
       widget.controller?.selectedValue = selectedValue;
       setState(() {});
     };
     widget.controller?.isValid = (dynamic value) {
       List<Map> tmp =
-          widget.datasourc.where((element) => element[widget.valueMember].toString() == value.toString()).toList();
+          widget.datasource.where((element) => element[widget.valueMember].toString() == value.toString()).toList();
       return tmp.isNotEmpty;
     };
-    selectedValue = widget.datasourc.first[widget.valueMember]?.toString() ?? "";
-    selectedText = widget.datasourc.first[widget.displayMember]?.toString() ?? "";
+    selectedValue = widget.datasource.first[widget.valueMember]?.toString() ?? "";
+    selectedText = widget.datasource.first[widget.displayMember]?.toString() ?? "";
     if (widget.controller != null) {
       if (widget.controller!.text.isNotEmpty ||
           (widget.controller!.selectedValue != null && widget.controller!.selectedValue.toString().isNotEmpty)) {
@@ -114,7 +114,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
       }
     }
     if (widget.defaultValue != null) {
-      List<Map> tmp = widget.datasourc
+      List<Map> tmp = widget.datasource
           .where((element) => element[widget.valueMember].toString() == widget.defaultValue.toString())
           .toList();
       if (tmp.isNotEmpty) {
@@ -129,7 +129,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
       {
         if (selectedValue != widget.controller!.selectedValue && (widget.controller!.selectedValue != null)) {
           try {
-            List<Map> tmp = widget.datasourc
+            List<Map> tmp = widget.datasource
                 .where((element) => element[widget.valueMember].toString() == widget.controller!.selectedValue)
                 .toList();
             if (tmp.isNotEmpty) {
@@ -144,7 +144,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
           } catch (_) {}
         } else if (selectedText != widget.controller!.text && widget.controller!.text.isNotEmpty) {
           try {
-            String tmp = widget.datasourc
+            String tmp = widget.datasource
                     .where((element) => element[widget.displayMember].trim() == widget.controller!.text.trim())
                     .first[widget.valueMember]
                     ?.toString() ??
@@ -277,7 +277,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
               }
             },
             // underline: Container(),
-            items: widget.datasourc
+            items: widget.datasource
                 .map((e) => DropdownMenuItem(
                       // onTap: () {
                       //   bool value = !selectedItems.contains(e[widget.valueMember]?.toString() ?? "");
@@ -320,15 +320,15 @@ class _CustomDropDownState extends State<CustomDropDown> {
                     ))
                 .toList(),
             value: widget.multiSelect
-                ? widget.datasourc.first[widget.valueMember]?.toString() ?? ""
-                : widget.datasourc.where((element) => element[widget.valueMember].toString() == selectedValue).isEmpty
-                    ? widget.datasourc.first[widget.valueMember]?.toString() ?? ""
+                ? widget.datasource.first[widget.valueMember]?.toString() ?? ""
+                : widget.datasource.where((element) => element[widget.valueMember].toString() == selectedValue).isEmpty
+                    ? widget.datasource.first[widget.valueMember]?.toString() ?? ""
                     : selectedValue,
 
             onChanged: (value) {
               if (!widget.multiSelect) {
                 selectedValue = value.toString();
-                selectedText = widget.datasourc
+                selectedText = widget.datasource
                         .where((element) => element[widget.valueMember].toString() == selectedValue)
                         .first[widget.displayMember]
                         ?.toString() ??

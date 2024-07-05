@@ -62,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             const CustomDropDown(
-              datasourc: [
+              datasource: [
                 {"name": "Sample1"},
                 {"name": "Sample2"},
                 {"name": "Sample3"},
@@ -74,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
             CustomTextbox(controller: TextEditingController(), labelText: "labelText", hintText: "hintText"),
             CustomDropDown(
               controller: ddl,
-              datasourc: const [
+              datasource: const [
                 {"name": "Sample1"},
                 {"name": "Sample2"},
                 {"name": "Sample3"},
@@ -85,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             CustomTextbox(controller: TextEditingController(), labelText: "labelText", hintText: "hintText"),
             const CustomDropDown(
-              datasourc: [
+              datasource: [
                 {"name": "Sample1"},
                 {"name": "Sample2"},
                 {"name": "Sample3"},
