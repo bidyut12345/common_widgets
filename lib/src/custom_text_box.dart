@@ -24,6 +24,7 @@ class CustomTextbox extends StatefulWidget {
     this.disableSuffixButtonClick = false,
     this.isMoneyFormatter = false,
     this.suffixIcon,
+    this.enabled = true,
 
     // required this.onChanged,
   });
@@ -44,6 +45,7 @@ class CustomTextbox extends StatefulWidget {
   final bool disableSuffixButtonClick;
   final bool isMoneyFormatter;
   final Widget? suffixIcon;
+  final bool enabled;
   @override
   State<CustomTextbox> createState() => _CustomTextboxState();
 }
@@ -67,9 +69,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? Color.fromARGB(255, 209, 209, 209)
-                      : Color.fromARGB(255, 86, 86, 86),
+                  color: Theme.of(context).brightness == Brightness.dark ? Color.fromARGB(255, 209, 209, 209) : Color.fromARGB(255, 86, 86, 86),
                   // color: Color.fromARGB(255, 86, 86, 86),
                 ),
                 children: [
@@ -119,10 +119,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
           },
           textCapitalization: widget.capitalization,
           style: TextStyle(
-              fontSize: 14,
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Color.fromARGB(255, 218, 218, 218)
-                  : Color.fromARGB(255, 71, 71, 71)),
+              fontSize: 14, color: Theme.of(context).brightness == Brightness.dark ? Color.fromARGB(255, 218, 218, 218) : Color.fromARGB(255, 71, 71, 71)),
           decoration: InputDecoration(
             // isDense: true,
             suffixIconConstraints: const BoxConstraints(maxHeight: 35, maxWidth: 45),
@@ -139,29 +136,33 @@ class _CustomTextboxState extends State<CustomTextbox> {
                               color: Colors.blue,
                               size: 20,
                             ),
+                            style: IconButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
                             onPressed: () {
                               if (widget.disableSuffixButtonClick) return;
+
                               showDatePicker(
                                 initialEntryMode: DatePickerEntryMode.calendarOnly,
                                 context: context,
                                 currentDate: DateTime.now(),
                                 initialDate: widget.controller.text.trim() != ''
-                                    ? DateFormat(CommonWidgetConfig.dateFormatString).parse(widget.controller.text)
+                                    ? (DateFormat(CommonWidgetConfig.dateFormatString).tryParse(widget.controller.text) ?? DateTime.now())
                                     : DateTime.now(),
-                                firstDate: DateTime(2000),
+                                firstDate: DateTime(0000),
                                 lastDate: DateTime(2100),
                                 builder: (context, child) {
                                   return Column(
                                     children: [
                                       child ?? Container(),
-                                      ElevatedButton(onPressed: () {}, child: Text("Now"))
+                                      ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.pop(context, DateTime.now());
+                                          },
+                                          child: Text("Now"))
                                     ],
                                   );
                                 },
                               ).then((value) {
-                                if (value != null)
-                                  widget.controller.text =
-                                      DateFormat(CommonWidgetConfig.dateFormatString).format(value);
+                                if (value != null) widget.controller.text = DateFormat(CommonWidgetConfig.dateFormatString).format(value);
                               });
                             },
                           ),
@@ -171,7 +172,11 @@ class _CustomTextboxState extends State<CustomTextbox> {
 
             hintText: widget.hintText,
             hintStyle: const TextStyle(color: Color.fromARGB(255, 108, 108, 108)),
-            fillColor: Theme.of(context).brightness == Brightness.dark ? Color.fromARGB(255, 69, 69, 69) : Colors.white,
+            fillColor: widget.enabled
+                ? Theme.of(context).brightness == Brightness.dark
+                    ? Color.fromARGB(255, 69, 69, 69)
+                    : Colors.white
+                : Colors.grey,
             filled: true,
             isCollapsed: true,
             contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
