@@ -26,13 +26,15 @@ class Loading extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           const CircularProgressIndicator(),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Text(
-                            loadingText,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          )
+                          if (loadingText.isNotEmpty)
+                            const SizedBox(
+                              height: 20,
+                            ),
+                          if (loadingText.isNotEmpty)
+                            Text(
+                              loadingText,
+                              style: const TextStyle(fontWeight: FontWeight.bold),
+                            )
                         ],
                       ),
                     ),
