@@ -9,14 +9,14 @@ class LoadingController extends ChangeNotifier {
     loadingText = text ?? "";
     notifyListeners();
     loadingCount += 1;
-    print("loading$loadingCount");
+    // print("loading$loadingCount");
   }
 
   void hideloading() {
     loadingCount -= 1;
     isLoading = loadingCount > 0;
     if (loadingCount < 0) loadingCount = 0;
-    print("unloading$loadingCount");
+    // print("unloading$loadingCount");
     loadingText = "";
     notifyListeners();
   }
@@ -24,7 +24,7 @@ class LoadingController extends ChangeNotifier {
   void resetLoading() {
     loadingCount = 0;
     isLoading = false;
-    print("reset$loadingCount");
+    // print("reset$loadingCount");
     loadingText = "";
     notifyListeners();
   }
