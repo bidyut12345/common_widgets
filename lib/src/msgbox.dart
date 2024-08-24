@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'fixed_panel.dart';
 
-msgBox(
-    {required String title,
-    required String message,
-    required Map<String, IconData> buttons,
-    required BuildContext context}) {
+msgBox({required String title, required String message, required Map<String, IconData> buttons, required BuildContext context}) {
   // Widget okButton = ElevatedButton.icon(
   //   icon: const Icon(Icons.keyboard_option_key),
   //   label: const Text("YES"),
@@ -42,6 +38,7 @@ msgBoxOkOnly({required BuildContext context, required String title, required Str
   var sc = ScrollController();
   showDialog(
       context: context,
+      useRootNavigator: false,
       builder: (cnt) {
         return AlertDialog(
           contentPadding: EdgeInsets.zero,
@@ -61,7 +58,7 @@ msgBoxOkOnly({required BuildContext context, required String title, required Str
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.pop(cnt);
                       },
                       child: const Padding(
                         padding: EdgeInsets.all(8.0),

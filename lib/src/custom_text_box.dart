@@ -1,3 +1,4 @@
+import 'package:common_widgets/src/input_formatters/uppercase_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -25,6 +26,7 @@ class CustomTextbox extends StatefulWidget {
     this.isMoneyFormatter = false,
     this.suffixIcon,
     this.enabled = true,
+    this.isUpperCase = false,
 
     // required this.onChanged,
   });
@@ -46,6 +48,7 @@ class CustomTextbox extends StatefulWidget {
   final bool isMoneyFormatter;
   final Widget? suffixIcon;
   final bool enabled;
+  final bool isUpperCase;
   @override
   State<CustomTextbox> createState() => _CustomTextboxState();
 }
@@ -69,7 +72,9 @@ class _CustomTextboxState extends State<CustomTextbox> {
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).brightness == Brightness.dark ? Color.fromARGB(255, 209, 209, 209) : Color.fromARGB(255, 86, 86, 86),
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? const Color.fromARGB(255, 209, 209, 209)
+                      : const Color.fromARGB(255, 86, 86, 86),
                   // color: Color.fromARGB(255, 86, 86, 86),
                 ),
                 children: [
@@ -98,7 +103,10 @@ class _CustomTextboxState extends State<CustomTextbox> {
           keyboardType: widget.multiline ? TextInputType.multiline : widget.keyboardtype,
           textInputAction: widget.multiline ? TextInputAction.newline : TextInputAction.next,
           obscureText: widget.obsecureText,
-          inputFormatters: widget.isMoneyFormatter ? [MoneyTextInputFormatter()] : null,
+          inputFormatters: [
+            if (widget.isMoneyFormatter) MoneyTextInputFormatter(),
+            if (widget.isUpperCase) UpperCaseTextFormatter(),
+          ],
           minLines: widget.multiline ? 2 : 1,
           maxLines: widget.multiline ? 5 : 1,
           textAlign: widget.textAlign,
@@ -119,7 +127,10 @@ class _CustomTextboxState extends State<CustomTextbox> {
           },
           textCapitalization: widget.capitalization,
           style: TextStyle(
-              fontSize: 14, color: Theme.of(context).brightness == Brightness.dark ? Color.fromARGB(255, 218, 218, 218) : Color.fromARGB(255, 71, 71, 71)),
+              fontSize: 14,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Color.fromARGB(255, 218, 218, 218)
+                  : Color.fromARGB(255, 71, 71, 71)),
           decoration: InputDecoration(
             // isDense: true,
             suffixIconConstraints: const BoxConstraints(maxHeight: 35, maxWidth: 45),
@@ -136,7 +147,8 @@ class _CustomTextboxState extends State<CustomTextbox> {
                               color: Colors.blue,
                               size: 20,
                             ),
-                            style: IconButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
+                            style: IconButton.styleFrom(
+                                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
                             onPressed: () {
                               if (widget.disableSuffixButtonClick) return;
 
@@ -145,7 +157,9 @@ class _CustomTextboxState extends State<CustomTextbox> {
                                 context: context,
                                 currentDate: DateTime.now(),
                                 initialDate: widget.controller.text.trim() != ''
-                                    ? (DateFormat(CommonWidgetConfig.dateFormatString).tryParse(widget.controller.text) ?? DateTime.now())
+                                    ? (DateFormat(CommonWidgetConfig.dateFormatString)
+                                            .tryParse(widget.controller.text) ??
+                                        DateTime.now())
                                     : DateTime.now(),
                                 firstDate: DateTime(0000),
                                 lastDate: DateTime(2100),
@@ -157,12 +171,15 @@ class _CustomTextboxState extends State<CustomTextbox> {
                                           onPressed: () {
                                             Navigator.pop(context, DateTime.now());
                                           },
-                                          child: Text("Now"))
+                                          child: const Text("Now"))
                                     ],
                                   );
                                 },
                               ).then((value) {
-                                if (value != null) widget.controller.text = DateFormat(CommonWidgetConfig.dateFormatString).format(value);
+                                if (value != null) {
+                                  widget.controller.text =
+                                      DateFormat(CommonWidgetConfig.dateFormatString).format(value);
+                                }
                               });
                             },
                           ),
@@ -174,7 +191,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
             hintStyle: const TextStyle(color: Color.fromARGB(255, 108, 108, 108)),
             fillColor: widget.enabled
                 ? Theme.of(context).brightness == Brightness.dark
-                    ? Color.fromARGB(255, 69, 69, 69)
+                    ? const Color.fromARGB(255, 69, 69, 69)
                     : Colors.white
                 : Colors.grey,
             filled: true,
