@@ -72,9 +72,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? const Color.fromARGB(255, 209, 209, 209)
-                      : const Color.fromARGB(255, 86, 86, 86),
+                  color: Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 209, 209, 209) : const Color.fromARGB(255, 86, 86, 86),
                   // color: Color.fromARGB(255, 86, 86, 86),
                 ),
                 children: [
@@ -127,10 +125,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
           },
           textCapitalization: widget.capitalization,
           style: TextStyle(
-              fontSize: 14,
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Color.fromARGB(255, 218, 218, 218)
-                  : Color.fromARGB(255, 71, 71, 71)),
+              fontSize: 14, color: Theme.of(context).brightness == Brightness.dark ? Color.fromARGB(255, 218, 218, 218) : Color.fromARGB(255, 71, 71, 71)),
           decoration: InputDecoration(
             // isDense: true,
             suffixIconConstraints: const BoxConstraints(maxHeight: 35, maxWidth: 45),
@@ -147,8 +142,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
                               color: Colors.blue,
                               size: 20,
                             ),
-                            style: IconButton.styleFrom(
-                                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
+                            style: IconButton.styleFrom(shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
                             onPressed: () {
                               if (widget.disableSuffixButtonClick) return;
 
@@ -156,10 +150,9 @@ class _CustomTextboxState extends State<CustomTextbox> {
                                 initialEntryMode: DatePickerEntryMode.calendarOnly,
                                 context: context,
                                 currentDate: DateTime.now(),
+                                useRootNavigator: false,
                                 initialDate: widget.controller.text.trim() != ''
-                                    ? (DateFormat(CommonWidgetConfig.dateFormatString)
-                                            .tryParse(widget.controller.text) ??
-                                        DateTime.now())
+                                    ? (DateFormat(CommonWidgetConfig.dateFormatString).tryParse(widget.controller.text) ?? DateTime.now())
                                     : DateTime.now(),
                                 firstDate: DateTime(0000),
                                 lastDate: DateTime(2100),
@@ -177,8 +170,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
                                 },
                               ).then((value) {
                                 if (value != null) {
-                                  widget.controller.text =
-                                      DateFormat(CommonWidgetConfig.dateFormatString).format(value);
+                                  widget.controller.text = DateFormat(CommonWidgetConfig.dateFormatString).format(value);
                                 }
                               });
                             },

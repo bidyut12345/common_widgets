@@ -86,15 +86,13 @@ class _CustomDropDownState extends State<CustomDropDown> {
       setState(() {});
     };
     widget.controller?.isValid = (dynamic value) {
-      List<Map> tmp =
-          widget.datasource.where((element) => element[widget.valueMember].toString() == value.toString()).toList();
+      List<Map> tmp = widget.datasource.where((element) => element[widget.valueMember].toString() == value.toString()).toList();
       return tmp.isNotEmpty;
     };
     selectedValue = widget.datasource.first[widget.valueMember]?.toString() ?? "";
     selectedText = widget.datasource.first[widget.displayMember]?.toString() ?? "";
     if (widget.controller != null) {
-      if (widget.controller!.text.isNotEmpty ||
-          (widget.controller!.selectedValue != null && widget.controller!.selectedValue.toString().isNotEmpty)) {
+      if (widget.controller!.text.isNotEmpty || (widget.controller!.selectedValue != null && widget.controller!.selectedValue.toString().isNotEmpty)) {
         loadvalue();
       } else {
         widget.controller!.text = selectedText;
@@ -114,9 +112,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
       }
     }
     if (widget.defaultValue != null) {
-      List<Map> tmp = widget.datasource
-          .where((element) => element[widget.valueMember].toString() == widget.defaultValue.toString())
-          .toList();
+      List<Map> tmp = widget.datasource.where((element) => element[widget.valueMember].toString() == widget.defaultValue.toString()).toList();
       if (tmp.isNotEmpty) {
         selectedValue = widget.defaultValue!;
         selectedText = tmp.first[widget.displayMember] ?? "";
@@ -129,9 +125,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
       {
         if (selectedValue != widget.controller!.selectedValue && (widget.controller!.selectedValue != null)) {
           try {
-            List<Map> tmp = widget.datasource
-                .where((element) => element[widget.valueMember].toString() == widget.controller!.selectedValue)
-                .toList();
+            List<Map> tmp = widget.datasource.where((element) => element[widget.valueMember].toString() == widget.controller!.selectedValue).toList();
             if (tmp.isNotEmpty) {
               var rr = tmp.first[widget.valueMember];
               selectedValue = rr.toString();
@@ -183,9 +177,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? const Color.fromARGB(255, 209, 209, 209)
-                      : const Color.fromARGB(255, 86, 86, 86),
+                  color: Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 209, 209, 209) : const Color.fromARGB(255, 86, 86, 86),
                 ),
                 children: [
                   TextSpan(
@@ -222,16 +214,8 @@ class _CustomDropDownState extends State<CustomDropDown> {
             //     end: Alignment.bottomCenter),
             gradient: LinearGradient(
                 colors: Theme.of(context).brightness == Brightness.dark
-                    ? [
-                        const Color.fromARGB(255, 56, 56, 56),
-                        const Color.fromARGB(255, 73, 73, 73),
-                        const Color.fromARGB(255, 87, 87, 87)
-                      ]
-                    : [
-                        const Color.fromARGB(255, 238, 237, 237),
-                        const Color.fromARGB(255, 230, 229, 229),
-                        const Color.fromARGB(255, 226, 228, 236)
-                      ],
+                    ? [const Color.fromARGB(255, 56, 56, 56), const Color.fromARGB(255, 73, 73, 73), const Color.fromARGB(255, 87, 87, 87)]
+                    : [const Color.fromARGB(255, 238, 237, 237), const Color.fromARGB(255, 230, 229, 229), const Color.fromARGB(255, 226, 228, 236)],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter),
             borderRadius: BorderRadius.circular(5),
@@ -262,8 +246,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
 
             validator: (value) {
               if (widget.required) {
-                if ((value?.toString() ?? "").trim().isEmpty ||
-                    (widget.wrongValues != null && widget.wrongValues!.contains(value))) {
+                if ((value?.toString() ?? "").trim().isEmpty || (widget.wrongValues != null && widget.wrongValues!.contains(value))) {
                   if (!focusRequested) {
                     fc.requestFocus();
                     focusRequested = true;
@@ -295,8 +278,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
                               return Checkbox(
                                   value: selectedItems.contains(e[widget.valueMember]?.toString() ?? ""),
                                   onChanged: (value) {
-                                    selectedItems
-                                        .removeWhere((element) => element == (e[widget.valueMember]?.toString() ?? ""));
+                                    selectedItems.removeWhere((element) => element == (e[widget.valueMember]?.toString() ?? ""));
                                     if (value ?? false) {
                                       selectedItems.add(e[widget.valueMember]?.toString() ?? "");
                                     }
@@ -308,13 +290,15 @@ class _CustomDropDownState extends State<CustomDropDown> {
                                   });
                             }),
                           Expanded(
-                              child: Text(
-                            e[widget.displayMember]?.toString() ?? "",
-                            style: TextStyle(
-                              color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
-                              fontSize: 14,
+                            child: Text(
+                              e[widget.displayMember]?.toString() ?? "",
+                              style: TextStyle(
+                                color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
+                                fontSize: 14,
+                              ),
+                              maxLines: 2,
                             ),
-                          ))
+                          ),
                         ],
                       ),
                     ))
@@ -328,15 +312,11 @@ class _CustomDropDownState extends State<CustomDropDown> {
             onChanged: (value) {
               if (!widget.multiSelect) {
                 selectedValue = value.toString();
-                selectedText = widget.datasource
-                        .where((element) => element[widget.valueMember].toString() == selectedValue)
-                        .first[widget.displayMember]
-                        ?.toString() ??
-                    "";
+                selectedText =
+                    widget.datasource.where((element) => element[widget.valueMember].toString() == selectedValue).first[widget.displayMember]?.toString() ?? "";
 
                 if (widget.controller != null) {
-                  if (selectedValue != widget.controller!.selectedValue &&
-                      widget.controller!.selectedValue.isNotEmpty) {
+                  if (selectedValue != widget.controller!.selectedValue && widget.controller!.selectedValue.isNotEmpty) {
                     widget.controller!.text = selectedText;
                     widget.controller!.selectedValue = selectedValue;
                   }
