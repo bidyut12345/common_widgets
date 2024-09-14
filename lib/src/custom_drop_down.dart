@@ -89,8 +89,8 @@ class _CustomDropDownState extends State<CustomDropDown> {
       List<Map> tmp = widget.datasource.where((element) => element[widget.valueMember].toString() == value.toString()).toList();
       return tmp.isNotEmpty;
     };
-    selectedValue = widget.datasource.first[widget.valueMember]?.toString() ?? "";
-    selectedText = widget.datasource.first[widget.displayMember]?.toString() ?? "";
+    if (widget.datasource.isNotEmpty) selectedValue = widget.datasource.first[widget.valueMember]?.toString() ?? "";
+    if (widget.datasource.isNotEmpty) selectedText = widget.datasource.first[widget.displayMember]?.toString() ?? "";
     if (widget.controller != null) {
       if (widget.controller!.text.isNotEmpty || (widget.controller!.selectedValue != null && widget.controller!.selectedValue.toString().isNotEmpty)) {
         loadvalue();
