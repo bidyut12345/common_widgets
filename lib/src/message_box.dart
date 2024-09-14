@@ -19,7 +19,7 @@ Future showMessageBox(
               padding: const EdgeInsets.only(bottom: 20),
               child: ElevatedButton(
                   autofocus: true,
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => Navigator.pop(cntxt),
                   child: Container(
                     constraints: const BoxConstraints(minWidth: 50, minHeight: 50),
                     alignment: Alignment.center,
