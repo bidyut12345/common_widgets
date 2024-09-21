@@ -16,3 +16,4 @@ export 'src/show_snack_bar.dart';
 export 'src/controller/loading_controller.dart';
 export 'src/common_widget_config.dart';
 export 'src/theme_helper.dart';
+export 'src/scale_widget.dart';
