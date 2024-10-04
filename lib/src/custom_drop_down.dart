@@ -6,6 +6,8 @@ class DropDownController extends TextEditingController {
   Function? onSelectedValueChanged;
   late Function(int index) selectItem;
   bool Function(dynamic)? isValid;
+  late int Function() getSelectedIndex;
+
   dynamic _selectedValue;
   dynamic get selectedValue => _selectedValue;
   set selectedValue(dynamic value) {
@@ -84,6 +86,9 @@ class _CustomDropDownState extends State<CustomDropDown> {
       widget.controller?.text = selectedText;
       widget.controller?.selectedValue = selectedValue;
       setState(() {});
+    };
+    widget.controller?.getSelectedIndex = () {
+      return widget.datasource.indexWhere((element) => element[widget.valueMember] == selectedValue);
     };
     widget.controller?.isValid = (dynamic value) {
       List<Map> tmp = widget.datasource.where((element) => element[widget.valueMember].toString() == value.toString()).toList();

@@ -14,6 +14,7 @@ Future showConfirmMessageBox(
   print(CommonWidgetConfig.appBrightnes);
   return showDialog(
       context: context,
+      useRootNavigator: false,
       builder: (cntxt) {
         return AlertDialog(
           scrollable: true,
