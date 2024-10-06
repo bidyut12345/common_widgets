@@ -11,6 +11,7 @@ class ThemeHelper {
     dispatcher.onPlatformBrightnessChanged = () {
       WidgetsBinding.instance.handlePlatformBrightnessChanged();
       platformBrightness = dispatcher.platformBrightness;
+      // platformBrightness = Brightness.light;
       onThemeChange();
     };
   }
@@ -22,6 +23,7 @@ class ThemeHelper {
 
   ///returns the bright of the app taking into account the system brightness.
   static Brightness getBrighnessCalculated(BuildContext context) {
+    // return Brightness.light;
     return Theme.of(context).brightness;
   }
 
