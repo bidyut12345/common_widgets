@@ -10,7 +10,7 @@ Future showConfirmMessageBox(
   String button2 = "No",
   String button3 = "",
 }) async {
-  bool isDarkMode = CommonWidgetConfig.appBrightnes == Brightness.dark;
+  var isDarkMode_ = ThemeHelper.isDarkMode(context);
   print(CommonWidgetConfig.appBrightnes);
   return showDialog(
       context: context,
@@ -25,7 +25,7 @@ Future showConfirmMessageBox(
           //   size: 50,
           // ),
           // backgroundColor: Colors.redAccent,
-          backgroundColor: isDarkMode ? Color.fromARGB(255, 36, 36, 36) : Color.fromARGB(255, 172, 172, 172),
+          backgroundColor: isDarkMode_ ? Color.fromARGB(255, 36, 36, 36) : Color.fromARGB(255, 172, 172, 172),
 
           actionsAlignment: MainAxisAlignment.center,
           actionsPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -36,7 +36,7 @@ Future showConfirmMessageBox(
                 Navigator.pop(context, button1);
               },
               style: ElevatedButton.styleFrom(
-                foregroundColor: isDarkMode ? Colors.white : Colors.black,
+                foregroundColor: isDarkMode_ ? Colors.white : Colors.black,
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -48,7 +48,7 @@ Future showConfirmMessageBox(
                 Navigator.pop(context, button2);
               },
               style: ElevatedButton.styleFrom(
-                foregroundColor: isDarkMode ? Colors.white : Colors.black,
+                foregroundColor: isDarkMode_ ? Colors.white : Colors.black,
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -61,7 +61,7 @@ Future showConfirmMessageBox(
                   Navigator.pop(context, button3);
                 },
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: isDarkMode ? Colors.white : Colors.black,
+                  foregroundColor: isDarkMode_ ? Colors.white : Colors.black,
                 ),
                 child: Text(button3),
               )
@@ -70,12 +70,12 @@ Future showConfirmMessageBox(
           ],
           contentPadding: EdgeInsets.zero,
           content: Container(
-            color: isDarkMode ? Colors.black45 : Colors.white54,
+            color: isDarkMode_ ? Colors.black45 : Colors.white54,
             child: Column(
               children: [
                 if (title.isNotEmpty) ...[
                   Container(
-                    color: isDarkMode ? const Color.fromARGB(255, 78, 78, 78) : Color.fromARGB(255, 107, 107, 107),
+                    color: isDarkMode_ ? const Color.fromARGB(255, 78, 78, 78) : Color.fromARGB(255, 107, 107, 107),
                     alignment: Alignment.center,
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -86,7 +86,7 @@ Future showConfirmMessageBox(
                             title,
                             // textScaleFactor: 1.5,
                             textAlign: TextAlign.center,
-                            style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
+                            style: TextStyle(color: isDarkMode_ ? Colors.white : Colors.black),
                           ),
                         ),
                       ],

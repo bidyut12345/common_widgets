@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'common_widget_config.dart';
 import 'globals.dart';
 import 'input_formatters/money_formatter.dart';
+import 'package:flutter/services.dart';
 
 class CustomTextbox extends StatefulWidget {
   const CustomTextbox({
@@ -27,6 +28,7 @@ class CustomTextbox extends StatefulWidget {
     this.suffixIcon,
     this.enabled = true,
     this.isUpperCase = false,
+    this.isNumber = false,
 
     // required this.onChanged,
   });
@@ -49,6 +51,7 @@ class CustomTextbox extends StatefulWidget {
   final Widget? suffixIcon;
   final bool enabled;
   final bool isUpperCase;
+  final bool isNumber;
   @override
   State<CustomTextbox> createState() => _CustomTextboxState();
 }
@@ -104,6 +107,10 @@ class _CustomTextboxState extends State<CustomTextbox> {
           inputFormatters: [
             if (widget.isMoneyFormatter) MoneyTextInputFormatter(),
             if (widget.isUpperCase) UpperCaseTextFormatter(),
+            // if (widget.isNumber) FilteringTextInputFormatter.digitsOnly,
+            if (widget.isNumber) FilteringTextInputFormatter.allow(RegExp(r'[0-9.-]')),
+            if (widget.isNumber)
+              TextInputFormatter.withFunction((oldValue, newValue) => newValue.text.isEmpty || double.tryParse(newValue.text) != null ? newValue : oldValue),
           ],
           minLines: widget.multiline ? 2 : 1,
           maxLines: widget.multiline ? 5 : 1,
@@ -157,14 +164,20 @@ class _CustomTextboxState extends State<CustomTextbox> {
                                 firstDate: DateTime(0000),
                                 lastDate: DateTime(2100),
                                 builder: (context, child) {
-                                  return Column(
+                                  return Stack(
+                                    alignment: Alignment.bottomLeft,
                                     children: [
+                                      // DatePickerDialog(
+                                      //   firstDate: DateTime(0000),
+                                      //   lastDate: DateTime(2100),
+                                      // ),
                                       child ?? Container(),
                                       ElevatedButton(
-                                          onPressed: () {
-                                            Navigator.pop(context, DateTime.now());
-                                          },
-                                          child: const Text("Now"))
+                                        onPressed: () {
+                                          Navigator.pop(context, DateTime.now());
+                                        },
+                                        child: const Text("Now"),
+                                      )
                                     ],
                                   );
                                 },
