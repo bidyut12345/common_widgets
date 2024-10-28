@@ -29,7 +29,11 @@ class CustomTextbox extends StatefulWidget {
     this.enabled = true,
     this.isUpperCase = false,
     this.isNumber = false,
-
+    this.height,
+    this.padding,
+    this.backgroundColor,
+    this.borderRadius,
+    this.fontSize = 12,
     // required this.onChanged,
   });
 
@@ -52,6 +56,11 @@ class CustomTextbox extends StatefulWidget {
   final bool enabled;
   final bool isUpperCase;
   final bool isNumber;
+  final double? height;
+  final Color? backgroundColor;
+  final EdgeInsets? padding;
+  final double? borderRadius;
+  final double fontSize;
   @override
   State<CustomTextbox> createState() => _CustomTextboxState();
 }
@@ -132,7 +141,8 @@ class _CustomTextboxState extends State<CustomTextbox> {
           },
           textCapitalization: widget.capitalization,
           style: TextStyle(
-              fontSize: 14, color: Theme.of(context).brightness == Brightness.dark ? Color.fromARGB(255, 218, 218, 218) : Color.fromARGB(255, 71, 71, 71)),
+              fontSize: widget.fontSize,
+              color: Theme.of(context).brightness == Brightness.dark ? Color.fromARGB(255, 218, 218, 218) : Color.fromARGB(255, 71, 71, 71)),
           decoration: InputDecoration(
             // isDense: true,
             suffixIconConstraints: const BoxConstraints(maxHeight: 35, maxWidth: 45),
@@ -195,34 +205,32 @@ class _CustomTextboxState extends State<CustomTextbox> {
             hintText: widget.hintText,
             hintStyle: const TextStyle(color: Color.fromARGB(255, 108, 108, 108)),
             fillColor: widget.enabled
-                ? Theme.of(context).brightness == Brightness.dark
-                    ? const Color.fromARGB(255, 69, 69, 69)
-                    : Colors.white
+                ? (widget.backgroundColor ?? (Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 69, 69, 69) : Colors.white))
                 : Colors.grey,
             filled: true,
             isCollapsed: true,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-            enabledBorder: const OutlineInputBorder(
+            contentPadding: widget.padding ?? const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+            enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.all(
-                Radius.circular(5),
+                Radius.circular(widget.borderRadius ?? 5),
               ),
               borderSide: BorderSide(
                 width: 0.1,
                 color: Colors.grey,
               ),
             ),
-            border: const OutlineInputBorder(
+            border: OutlineInputBorder(
               borderRadius: BorderRadius.all(
-                Radius.circular(5),
+                Radius.circular(widget.borderRadius ?? 5),
               ),
               borderSide: BorderSide(
                 width: 0.1,
                 color: Colors.grey,
               ),
             ),
-            focusedBorder: const OutlineInputBorder(
+            focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.all(
-                Radius.circular(5),
+                Radius.circular(widget.borderRadius ?? 5),
               ),
               borderSide: BorderSide(
                 width: 1,
