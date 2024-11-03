@@ -84,7 +84,9 @@ class _CustomTextboxState extends State<CustomTextbox> {
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 209, 209, 209) : const Color.fromARGB(255, 86, 86, 86),
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? const Color.fromARGB(255, 209, 209, 209)
+                      : const Color.fromARGB(255, 86, 86, 86),
                   // color: Color.fromARGB(255, 86, 86, 86),
                 ),
                 children: [
@@ -119,7 +121,8 @@ class _CustomTextboxState extends State<CustomTextbox> {
             // if (widget.isNumber) FilteringTextInputFormatter.digitsOnly,
             if (widget.isNumber) FilteringTextInputFormatter.allow(RegExp(r'[0-9.-]')),
             if (widget.isNumber)
-              TextInputFormatter.withFunction((oldValue, newValue) => newValue.text.isEmpty || double.tryParse(newValue.text) != null ? newValue : oldValue),
+              TextInputFormatter.withFunction((oldValue, newValue) =>
+                  newValue.text.isEmpty || double.tryParse(newValue.text) != null ? newValue : oldValue),
           ],
           minLines: widget.multiline ? 2 : 1,
           maxLines: widget.multiline ? 5 : 1,
@@ -142,7 +145,9 @@ class _CustomTextboxState extends State<CustomTextbox> {
           textCapitalization: widget.capitalization,
           style: TextStyle(
               fontSize: widget.fontSize,
-              color: Theme.of(context).brightness == Brightness.dark ? Color.fromARGB(255, 218, 218, 218) : Color.fromARGB(255, 71, 71, 71)),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Color.fromARGB(255, 218, 218, 218)
+                  : Color.fromARGB(255, 71, 71, 71)),
           decoration: InputDecoration(
             // isDense: true,
             suffixIconConstraints: const BoxConstraints(maxHeight: 35, maxWidth: 45),
@@ -159,18 +164,22 @@ class _CustomTextboxState extends State<CustomTextbox> {
                               color: Colors.blue,
                               size: 20,
                             ),
-                            style: IconButton.styleFrom(shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
+                            style: IconButton.styleFrom(
+                                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
                             onPressed: () {
                               if (widget.disableSuffixButtonClick) return;
-
+                              var dt = DateTime.now();
+                              try {
+                                dt = widget.controller.text.trim() != ''
+                                    ? DateFormat(CommonWidgetConfig.dateFormatString).parse(widget.controller.text)
+                                    : DateTime.now();
+                              } catch (e) {}
                               showDatePicker(
                                 initialEntryMode: DatePickerEntryMode.calendarOnly,
                                 context: context,
                                 currentDate: DateTime.now(),
                                 useRootNavigator: false,
-                                initialDate: widget.controller.text.trim() != ''
-                                    ? (DateFormat(CommonWidgetConfig.dateFormatString).tryParse(widget.controller.text) ?? DateTime.now())
-                                    : DateTime.now(),
+                                initialDate: dt,
                                 firstDate: DateTime(0000),
                                 lastDate: DateTime(2100),
                                 builder: (context, child) {
@@ -193,7 +202,8 @@ class _CustomTextboxState extends State<CustomTextbox> {
                                 },
                               ).then((value) {
                                 if (value != null) {
-                                  widget.controller.text = DateFormat(CommonWidgetConfig.dateFormatString).format(value);
+                                  widget.controller.text =
+                                      DateFormat(CommonWidgetConfig.dateFormatString).format(value);
                                 }
                               });
                             },
@@ -205,7 +215,10 @@ class _CustomTextboxState extends State<CustomTextbox> {
             hintText: widget.hintText,
             hintStyle: const TextStyle(color: Color.fromARGB(255, 108, 108, 108)),
             fillColor: widget.enabled
-                ? (widget.backgroundColor ?? (Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 69, 69, 69) : Colors.white))
+                ? (widget.backgroundColor ??
+                    (Theme.of(context).brightness == Brightness.dark
+                        ? const Color.fromARGB(255, 69, 69, 69)
+                        : Colors.white))
                 : Colors.grey,
             filled: true,
             isCollapsed: true,
