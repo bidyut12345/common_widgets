@@ -112,8 +112,8 @@ class _CustomDropDownSearchableState extends State<CustomDropDownSearchable> {
             padding: EdgeInsets.only(
               left: padd.left,
               right: padd.right,
-              top: padd.top - 4,
-              bottom: padd.bottom - 2,
+              top: max(padd.top - 4, 0),
+              bottom: max(padd.bottom - 2, 0),
             ),
             decoration: BoxDecoration(
               color: Theme.of(context).brightness == Brightness.dark
@@ -352,6 +352,7 @@ class _CustomDropDownSearchableState extends State<CustomDropDownSearchable> {
                                     color: Colors.grey,
                                   ),
                                 ),
+                                clipBehavior: Clip.antiAlias,
                                 child: ScrollablePositionedList.builder(
                                   shrinkWrap: true,
                                   itemScrollController: sc,
@@ -366,23 +367,30 @@ class _CustomDropDownSearchableState extends State<CustomDropDownSearchable> {
                                       style: TextButton.styleFrom(
                                           padding: const EdgeInsets.symmetric(horizontal: 5),
                                           foregroundColor: ThemeHelper.isDarkMode(contextdlg)
-                                              ? const Color.fromARGB(255, 221, 221, 221)
-                                              : const Color.fromARGB(255, 39, 39, 39),
+                                              ? Color.fromARGB(255, 221, 221, 221)
+                                              : Color.fromARGB(255, 39, 39, 39),
                                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-                                          backgroundColor: index - 1 == selectedIndex ? Colors.red : null,
+                                          backgroundColor: index - 1 == selectedIndex
+                                              ? Colors.red
+                                              : index % 2 == 0
+                                                  ? Colors.grey.withOpacity(0.1)
+                                                  : null,
                                           minimumSize: const Size(0, 0)),
                                       child: widget.displayMemberBuilder != null
                                           ? widget.displayMemberBuilder!(e)
-                                          : Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Expanded(
-                                                  child: Text(
-                                                    " ${e[widget.displayMember]}",
-                                                    softWrap: true,
+                                          : Padding(
+                                              padding: EdgeInsets.only(bottom: 2),
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Expanded(
+                                                    child: Text(
+                                                      "${e[widget.displayMember]}",
+                                                      softWrap: true,
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
                                       onPressed: () {
                                         Navigator.pop(contextdlg, e);
