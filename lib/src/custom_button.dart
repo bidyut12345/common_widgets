@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+enum IconTextAlignment { beforeText, afterText, aboveText, belowText }
+
 class CustomButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
@@ -12,6 +14,11 @@ class CustomButton extends StatelessWidget {
   final Alignment alignment;
   final double? height;
   final double? width;
+
+  final Widget? icon;
+  final double iconTextGap;
+  final IconTextAlignment iconAlignment;
+
   // final Color color;
   const CustomButton({
     Key? key,
@@ -26,6 +33,9 @@ class CustomButton extends StatelessWidget {
     this.height,
     this.width,
     this.alignment = Alignment.center,
+    this.icon,
+    this.iconTextGap = 5,
+    this.iconAlignment = IconTextAlignment.beforeText,
   }) : super(key: key);
 
   @override
@@ -45,17 +55,32 @@ class CustomButton extends StatelessWidget {
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius)),
             alignment: alignment,
           ),
-          child: Text(
-            text,
-            style: TextStyle(
-              color: forecolor ?? (Theme.of(context).brightness == Brightness.dark ? Colors.white : Color.fromARGB(255, 228, 228, 228)),
-              fontSize: fontSize,
-            ),
-            textAlign: [Alignment.topLeft, Alignment.bottomLeft, Alignment.centerLeft].contains(alignment)
-                ? TextAlign.left
-                : [Alignment.center, Alignment.topCenter, Alignment.bottomCenter].contains(alignment)
-                    ? TextAlign.center
-                    : TextAlign.right,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              if (icon != null) ...[
+                icon!,
+                SizedBox(
+                  width: iconTextGap,
+                ),
+              ],
+              Text(
+                text,
+                style: TextStyle(
+                  color: forecolor ?? (Theme.of(context).brightness == Brightness.dark ? Colors.white : Color.fromARGB(255, 228, 228, 228)),
+                  fontSize: fontSize,
+                ),
+                textAlign: [Alignment.topLeft, Alignment.bottomLeft, Alignment.centerLeft].contains(alignment)
+                    ? TextAlign.left
+                    : [Alignment.center, Alignment.topCenter, Alignment.bottomCenter].contains(alignment)
+                        ? TextAlign.center
+                        : TextAlign.right,
+              ),
+              if (icon != null) ...[
+                const SizedBox(width: 5),
+              ],
+            ],
           ),
         ),
       ),
