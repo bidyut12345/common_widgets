@@ -34,7 +34,7 @@ class CustomTextbox extends StatefulWidget {
     this.backgroundColor,
     this.borderRadius,
     this.fontSize = 12,
-    // required this.onChanged,
+    this.onChanged,
   });
 
   final TextEditingController controller;
@@ -61,6 +61,7 @@ class CustomTextbox extends StatefulWidget {
   final EdgeInsets? padding;
   final double? borderRadius;
   final double fontSize;
+  final Function(String value)? onChanged;
   @override
   State<CustomTextbox> createState() => _CustomTextboxState();
 }
@@ -84,9 +85,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? const Color.fromARGB(255, 209, 209, 209)
-                      : const Color.fromARGB(255, 86, 86, 86),
+                  color: Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 209, 209, 209) : const Color.fromARGB(255, 86, 86, 86),
                   // color: Color.fromARGB(255, 86, 86, 86),
                 ),
                 children: [
@@ -121,9 +120,11 @@ class _CustomTextboxState extends State<CustomTextbox> {
             // if (widget.isNumber) FilteringTextInputFormatter.digitsOnly,
             if (widget.isNumber) FilteringTextInputFormatter.allow(RegExp(r'[0-9.-]')),
             if (widget.isNumber)
-              TextInputFormatter.withFunction((oldValue, newValue) =>
-                  newValue.text.isEmpty || double.tryParse(newValue.text) != null ? newValue : oldValue),
+              TextInputFormatter.withFunction((oldValue, newValue) => newValue.text.isEmpty || double.tryParse(newValue.text) != null ? newValue : oldValue),
           ],
+          onChanged: (value) {
+            if (widget.onChanged != null) widget.onChanged!(value);
+          },
           minLines: widget.multiline ? 2 : 1,
           maxLines: widget.multiline ? 5 : 1,
           textAlign: widget.textAlign,
@@ -145,9 +146,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
           textCapitalization: widget.capitalization,
           style: TextStyle(
               fontSize: widget.fontSize,
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Color.fromARGB(255, 218, 218, 218)
-                  : Color.fromARGB(255, 71, 71, 71)),
+              color: Theme.of(context).brightness == Brightness.dark ? Color.fromARGB(255, 218, 218, 218) : Color.fromARGB(255, 71, 71, 71)),
           decoration: InputDecoration(
             // isDense: true,
             suffixIconConstraints: const BoxConstraints(maxHeight: 35, maxWidth: 45),
@@ -164,8 +163,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
                               color: Colors.blue,
                               size: 20,
                             ),
-                            style: IconButton.styleFrom(
-                                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
+                            style: IconButton.styleFrom(shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
                             onPressed: () {
                               if (widget.disableSuffixButtonClick) return;
                               var dt = DateTime.now();
@@ -202,8 +200,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
                                 },
                               ).then((value) {
                                 if (value != null) {
-                                  widget.controller.text =
-                                      DateFormat(CommonWidgetConfig.dateFormatString).format(value);
+                                  widget.controller.text = DateFormat(CommonWidgetConfig.dateFormatString).format(value);
                                 }
                               });
                             },
@@ -215,10 +212,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
             hintText: widget.hintText,
             hintStyle: const TextStyle(color: Color.fromARGB(255, 108, 108, 108)),
             fillColor: widget.enabled
-                ? (widget.backgroundColor ??
-                    (Theme.of(context).brightness == Brightness.dark
-                        ? const Color.fromARGB(255, 69, 69, 69)
-                        : Colors.white))
+                ? (widget.backgroundColor ?? (Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 69, 69, 69) : Colors.white))
                 : Colors.grey,
             filled: true,
             isCollapsed: true,
