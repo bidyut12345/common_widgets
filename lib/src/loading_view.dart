@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 // import 'package:provider/provider.dart';
 import '../common_widgets.dart';
 
@@ -29,18 +30,19 @@ class LoadingWidget extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const SizedBox(
-                                height: 100,
-                                child: Center(
-                                  child: SizedBox(
-                                    height: 60,
-                                    width: 60,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 8,
+                              if (!kDebugMode)
+                                const SizedBox(
+                                  height: 100,
+                                  child: Center(
+                                    child: SizedBox(
+                                      height: 60,
+                                      width: 60,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 8,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
                               if (LoadingController.instance!.loadingText != "") ...[
                                 const SizedBox(
                                   height: 20,

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 class Loading extends StatelessWidget {
-  const Loading({Key? key, required this.child, required this.isLoading, this.loadingText = "", this.fit = StackFit.expand}) : super(key: key);
+  const Loading(
+      {Key? key, required this.child, required this.isLoading, this.loadingText = "", this.fit = StackFit.expand})
+      : super(key: key);
   final Widget child;
   final bool isLoading;
   final String loadingText;
@@ -25,7 +28,7 @@ class Loading extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const CircularProgressIndicator(),
+                          if (!kDebugMode) const CircularProgressIndicator(),
                           if (loadingText.isNotEmpty)
                             const SizedBox(
                               height: 20,
