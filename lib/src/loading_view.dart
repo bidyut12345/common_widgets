@@ -30,6 +30,7 @@ class LoadingWidget extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisSize: MainAxisSize.min,
                             children: [
+                              if (kDebugMode) const Text("Loading...\n[Circularprogressbar is Hidden in DEBUG MODE]"),
                               if (!kDebugMode)
                                 const SizedBox(
                                   height: 100,
