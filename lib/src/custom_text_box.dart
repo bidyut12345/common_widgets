@@ -20,7 +20,7 @@ class CustomTextbox extends StatefulWidget {
     this.multiline = false,
     this.endPadding = 5,
     this.readOnly = false,
-    this.autoFocus = false,
+    this.autofocus = false,
     this.showLabel = true,
     this.textAlign = TextAlign.left,
     this.disableSuffixButtonClick = false,
@@ -29,6 +29,7 @@ class CustomTextbox extends StatefulWidget {
     this.enabled = true,
     this.isUpperCase = false,
     this.isNumber = false,
+    this.enableInteractiveSelection = false,
     this.height,
     this.padding,
     this.backgroundColor,
@@ -48,9 +49,11 @@ class CustomTextbox extends StatefulWidget {
   final double endPadding;
   final bool readOnly;
   final TextAlign textAlign;
-  final bool autoFocus;
   final bool showLabel;
   final bool disableSuffixButtonClick;
+  final bool autofocus;
+  final bool enableInteractiveSelection;
+
   final bool isMoneyFormatter;
   final Widget? suffixIcon;
   final bool enabled;
@@ -107,9 +110,10 @@ class _CustomTextboxState extends State<CustomTextbox> {
           const SizedBox(height: 3),
         ],
         TextFormField(
-          autofocus: widget.autoFocus,
+          autofocus: widget.autofocus,
           focusNode: fc,
           readOnly: widget.readOnly,
+          enableInteractiveSelection: widget.enableInteractiveSelection,
           controller: widget.controller,
           keyboardType: widget.multiline ? TextInputType.multiline : widget.keyboardtype,
           textInputAction: widget.multiline ? TextInputAction.newline : TextInputAction.next,

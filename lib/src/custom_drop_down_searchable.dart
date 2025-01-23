@@ -313,7 +313,7 @@ class _CustomDropDownSearchableState extends State<CustomDropDownSearchable> {
                                 labelText: '',
                                 hintText: '',
                                 required: false,
-                                autoFocus: true,
+                                autofocus: true,
                                 endPadding: 0,
                                 showLabel: false,
                                 padding: padd,
