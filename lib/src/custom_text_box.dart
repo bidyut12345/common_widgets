@@ -11,8 +11,8 @@ class CustomTextbox extends StatefulWidget {
   const CustomTextbox({
     super.key,
     required this.controller,
-    required this.labelText,
-    required this.hintText,
+    this.labelText = '',
+    this.hintText = '',
     this.keyboardtype = TextInputType.text,
     this.capitalization = TextCapitalization.words,
     this.required = true,
@@ -36,6 +36,10 @@ class CustomTextbox extends StatefulWidget {
     this.borderRadius,
     this.fontSize = 12,
     this.onChanged,
+    this.onFocused,
+    this.onFocusleave,
+    this.onSubmitted,
+    this.focusNode,
   });
 
   final TextEditingController controller;
@@ -64,15 +68,30 @@ class CustomTextbox extends StatefulWidget {
   final EdgeInsets? padding;
   final double? borderRadius;
   final double fontSize;
+  final FocusNode? focusNode;
   final Function(String value)? onChanged;
+  final Function(String value)? onFocusleave;
+  final Function(String value)? onFocused;
+  final Function(String value)? onSubmitted;
   @override
   State<CustomTextbox> createState() => _CustomTextboxState();
 }
 
 class _CustomTextboxState extends State<CustomTextbox> {
-  FocusNode fc = FocusNode();
+  late FocusNode fc;
+  @override
+  void initState() {
+    super.initState();
+    fc = widget.focusNode ?? FocusNode();
+    fc.addListener(() {
+      if (fc.hasFocus) {
+        if (widget.onFocused != null) widget.onFocused!(widget.controller.text);
+      } else {
+        if (widget.onFocusleave != null) widget.onFocusleave!(widget.controller.text);
+      }
+    });
+  }
 
-  // final void Function(String) onChanged;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -118,6 +137,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
           keyboardType: widget.multiline ? TextInputType.multiline : widget.keyboardtype,
           textInputAction: widget.multiline ? TextInputAction.newline : TextInputAction.next,
           obscureText: widget.obsecureText,
+          onFieldSubmitted: widget.onSubmitted,
           inputFormatters: [
             if (widget.isMoneyFormatter) MoneyTextInputFormatter(),
             if (widget.isUpperCase) UpperCaseTextFormatter(),
