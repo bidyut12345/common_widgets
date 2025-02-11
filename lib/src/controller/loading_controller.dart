@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class LoadingController extends ChangeNotifier {
   bool isLoading = false;
-  String loadingText = "";
+  ValueNotifier<String> loadingText = ValueNotifier("");
   int loadingCount = 0;
+
   Map<BuildContext, BuildContext> contexts = {};
   void showloading({String? text, BuildContext? context, Function? onCancel}) {
     if (context != null && context.mounted) {
@@ -32,7 +33,7 @@ class LoadingController extends ChangeNotifier {
       );
     } else {
       isLoading = true;
-      loadingText = text ?? "";
+      loadingText.value = text ?? "";
       notifyListeners();
       loadingCount += 1;
       // print("loading$loadingCount");
@@ -48,7 +49,7 @@ class LoadingController extends ChangeNotifier {
       isLoading = loadingCount > 0;
       if (loadingCount < 0) loadingCount = 0;
       // print("unloading$loadingCount");
-      loadingText = "";
+      loadingText.value = "";
       notifyListeners();
     }
   }
@@ -57,7 +58,12 @@ class LoadingController extends ChangeNotifier {
     loadingCount = 0;
     isLoading = false;
     // print("reset$loadingCount");
-    loadingText = "";
+    loadingText.value = "";
+    notifyListeners();
+  }
+
+  void setLoadingText(String loadingtext) {
+    loadingText.value = loadingtext;
     notifyListeners();
   }
 

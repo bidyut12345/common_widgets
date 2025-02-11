@@ -30,7 +30,11 @@ class LoadingWidget extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              if (kDebugMode) const Text("Loading...\n[Circularprogressbar is Hidden in DEBUG MODE]"),
+                              if (kDebugMode)
+                                const Text(
+                                  "Loading...\n[Circularprogressbar is Hidden in DEBUG MODE]",
+                                  textAlign: TextAlign.center,
+                                ),
                               if (!kDebugMode)
                                 const SizedBox(
                                   height: 100,
@@ -44,12 +48,12 @@ class LoadingWidget extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                              if (LoadingController.instance!.loadingText != "") ...[
+                              if (LoadingController.instance!.loadingText.value != "") ...[
                                 const SizedBox(
                                   height: 20,
                                 ),
                                 Text(
-                                  LoadingController.instance!.loadingText,
+                                  LoadingController.instance!.loadingText.value,
                                   style: const TextStyle(fontWeight: FontWeight.bold),
                                 )
                               ]
