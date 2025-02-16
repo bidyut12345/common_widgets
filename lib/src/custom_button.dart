@@ -58,6 +58,7 @@ class CustomButton extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
               if (icon != null) ...[
                 icon!,
@@ -65,17 +66,20 @@ class CustomButton extends StatelessWidget {
                   width: iconTextGap,
                 ),
               ],
-              Text(
-                text,
-                style: TextStyle(
-                  color: forecolor ?? (Theme.of(context).brightness == Brightness.dark ? Colors.white : Color.fromARGB(255, 228, 228, 228)),
-                  fontSize: fontSize,
+              Flexible(
+                child: Text(
+                  text,
+                  softWrap: true,
+                  style: TextStyle(
+                    color: forecolor ?? (Theme.of(context).brightness == Brightness.dark ? Colors.white : Color.fromARGB(255, 228, 228, 228)),
+                    fontSize: fontSize,
+                  ),
+                  textAlign: [Alignment.topLeft, Alignment.bottomLeft, Alignment.centerLeft].contains(alignment)
+                      ? TextAlign.left
+                      : [Alignment.center, Alignment.topCenter, Alignment.bottomCenter].contains(alignment)
+                          ? TextAlign.center
+                          : TextAlign.right,
                 ),
-                textAlign: [Alignment.topLeft, Alignment.bottomLeft, Alignment.centerLeft].contains(alignment)
-                    ? TextAlign.left
-                    : [Alignment.center, Alignment.topCenter, Alignment.bottomCenter].contains(alignment)
-                        ? TextAlign.center
-                        : TextAlign.right,
               ),
               if (icon != null) ...[
                 const SizedBox(width: 5),
