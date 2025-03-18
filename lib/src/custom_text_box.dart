@@ -1,5 +1,6 @@
 import 'package:common_widgets/src/input_formatters/uppercase_formatter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
 import 'common_widget_config.dart';
@@ -34,7 +35,7 @@ class CustomTextbox extends StatefulWidget {
     this.padding,
     this.backgroundColor,
     this.borderRadius,
-    this.fontSize = 12,
+    this.fontSize = 14,
     this.onChanged,
     this.onFocused,
     this.onFocusleave,
@@ -240,7 +241,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
                 : Colors.grey,
             filled: true,
             isCollapsed: true,
-            contentPadding: widget.padding ?? const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+            contentPadding: widget.padding ?? const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.all(
                 Radius.circular(widget.borderRadius ?? 5),

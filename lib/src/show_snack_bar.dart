@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 showSnackBar(BuildContext context, String text) {
-  debugPrint(MediaQuery.of(context).size.width.toString());
+  // debugPrint(MediaQuery.of(context).size.width.toString());
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       // width: 500,

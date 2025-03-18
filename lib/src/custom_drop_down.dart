@@ -45,6 +45,7 @@ class CustomDropDown extends StatefulWidget {
     this.showLabel = true,
     this.wrongValues,
     this.multiSelect = false,
+    this.fontSize = 14,
   });
 
   final DropDownController? controller;
@@ -59,6 +60,7 @@ class CustomDropDown extends StatefulWidget {
   final bool showLabel;
   final double endPadding;
   final bool multiSelect;
+  final double fontSize;
 
   final Function(String value, String text)? onChanged;
 
@@ -236,6 +238,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
             borderRadius: BorderRadius.circular(10),
             style: TextStyle(
               color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
+              fontSize: widget.fontSize,
             ),
             decoration: const InputDecoration(
               enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.transparent, width: 0)),
@@ -247,7 +250,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
               isCollapsed: true,
               // contentPadding: EdgeInsets.zero,
             ),
-            padding: EdgeInsets.symmetric(vertical: 7.5),
+            padding: EdgeInsets.symmetric(vertical: (widget.fontSize / 2) - 3, horizontal: 0),
 
             validator: (value) {
               if (widget.required) {
@@ -299,7 +302,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
                               e[widget.displayMember]?.toString() ?? "",
                               style: TextStyle(
                                 color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
-                                fontSize: 14,
+                                fontSize: widget.fontSize,
                               ),
                               maxLines: 2,
                             ),
