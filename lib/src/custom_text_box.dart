@@ -27,6 +27,7 @@ class CustomTextbox extends StatefulWidget {
     this.disableSuffixButtonClick = false,
     this.isMoneyFormatter = false,
     this.suffixIcon,
+    this.prefixIcon,
     this.enabled = true,
     this.isUpperCase = false,
     this.isNumber = false,
@@ -36,11 +37,18 @@ class CustomTextbox extends StatefulWidget {
     this.backgroundColor,
     this.borderRadius,
     this.fontSize = 14,
+    this.fontWeight = FontWeight.normal,
     this.onChanged,
     this.onFocused,
     this.onFocusleave,
     this.onSubmitted,
     this.focusNode,
+    this.onTap,
+    this.showFloatingLabel = false,
+    this.alwaysShowFloatingLabel = true,
+    this.focusable = true,
+    this.compact = false,
+    this.keyPress,
   });
 
   final TextEditingController controller;
@@ -55,12 +63,16 @@ class CustomTextbox extends StatefulWidget {
   final bool readOnly;
   final TextAlign textAlign;
   final bool showLabel;
+  final bool showFloatingLabel;
+  final bool alwaysShowFloatingLabel;
   final bool disableSuffixButtonClick;
   final bool autofocus;
+  final bool focusable;
   final bool enableInteractiveSelection;
 
   final bool isMoneyFormatter;
   final Widget? suffixIcon;
+  final Widget? prefixIcon;
   final bool enabled;
   final bool isUpperCase;
   final bool isNumber;
@@ -69,32 +81,88 @@ class CustomTextbox extends StatefulWidget {
   final EdgeInsets? padding;
   final double? borderRadius;
   final double fontSize;
+  final FontWeight fontWeight;
   final FocusNode? focusNode;
+  final bool compact;
   final Function(String value)? onChanged;
-  final Function(String value)? onFocusleave;
-  final Function(String value)? onFocused;
-  final Function(String value)? onSubmitted;
+  final Function(String value, FocusNode fn)? onFocusleave;
+  final Function(String value, FocusNode fn)? onFocused;
+  final Function(String value, FocusNode fn)? onSubmitted;
+  final Function(String value)? onTap;
+  final Function(
+    PhysicalKeyboardKey keyCode,
+    FocusNode fn,
+  )? keyPress;
   @override
   State<CustomTextbox> createState() => _CustomTextboxState();
 }
 
 class _CustomTextboxState extends State<CustomTextbox> {
   late FocusNode fc;
+  late FocusNode fcKeyboard;
   @override
   void initState() {
     super.initState();
     fc = widget.focusNode ?? FocusNode();
+    fcKeyboard = FocusNode();
     fc.addListener(() {
       if (fc.hasFocus) {
-        if (widget.onFocused != null) widget.onFocused!(widget.controller.text);
+        if (widget.onFocused != null) {
+          widget.onFocused!(widget.controller.text, fc);
+          if (fc.hasFocus && !widget.focusable) {
+            fc.nextFocus();
+          }
+        }
       } else {
-        if (widget.onFocusleave != null) widget.onFocusleave!(widget.controller.text);
+        if (widget.onFocusleave != null) widget.onFocusleave!(widget.controller.text, fc);
       }
     });
+    // fcKeyboard.addListener(() {
+    //   if (fcKeyboard.hasFocus) {
+    //     fcKeyboard.nextFocus();
+    //     // print("got focus keyboard ${widget.labelText}");
+    //   }
+    // });
   }
 
+  PhysicalKeyboardKey? downKey;
   @override
   Widget build(BuildContext context) {
+    var label = RichText(
+      textAlign: TextAlign.left,
+      text: TextSpan(
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+          color: Theme.of(context).brightness == Brightness.dark
+              ? const Color.fromARGB(255, 209, 209, 209)
+              : const Color.fromARGB(255, 86, 86, 86),
+          // color: Color.fromARGB(255, 86, 86, 86),
+        ),
+        children: [
+          TextSpan(
+            text: widget.labelText,
+          ),
+          TextSpan(
+            text: widget.required ? " *" : "",
+            style: TextStyle(
+              color: Colors.red[700],
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          )
+        ],
+      ),
+    );
+    // focusNode: fc,
+    // onKeyEvent: (value) {
+    //   if (value is KeyDownEvent) {
+    //     downKey = value.physicalKey;
+    //   }
+    //   if (value is KeyUpEvent && downKey == value.physicalKey) {
+    //     if (widget.keyPress != null) widget.keyPress!(value.physicalKey, fc);
+    //   }
+    // },
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -102,53 +170,47 @@ class _CustomTextboxState extends State<CustomTextbox> {
         if (widget.showLabel) ...[
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-            child: RichText(
-              textAlign: TextAlign.left,
-              text: TextSpan(
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 209, 209, 209) : const Color.fromARGB(255, 86, 86, 86),
-                  // color: Color.fromARGB(255, 86, 86, 86),
-                ),
-                children: [
-                  TextSpan(
-                    text: widget.labelText,
-                  ),
-                  TextSpan(
-                    text: widget.required ? " *" : "",
-                    style: TextStyle(
-                      color: Colors.red[700],
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )
-                ],
-              ),
-            ),
+            child: label,
           ),
-          const SizedBox(height: 3),
+          if (!widget.compact) const SizedBox(height: 3),
         ],
+        // EditableText(
+        //   style: TextStyle(),
+        //   controller: widget.controller,
+        //   cursorColor: Colors.black,
+        //   focusNode: fcKeyboard,
+        //   backgroundCursorColor: Colors.red,
+        // ),
         TextFormField(
           autofocus: widget.autofocus,
-          focusNode: fc,
+          // focusNode: fc,
           readOnly: widget.readOnly,
           enableInteractiveSelection: widget.enableInteractiveSelection,
           controller: widget.controller,
           keyboardType: widget.multiline ? TextInputType.multiline : widget.keyboardtype,
-          textInputAction: widget.multiline ? TextInputAction.newline : TextInputAction.next,
+          textInputAction: widget.multiline
+              ? TextInputAction.newline
+              : widget.keyPress == null
+                  ? TextInputAction.next
+                  : TextInputAction.none,
           obscureText: widget.obsecureText,
-          onFieldSubmitted: widget.onSubmitted,
+          onFieldSubmitted: (value) {
+            if (widget.onSubmitted != null) widget.onSubmitted!(value, fc);
+          },
           inputFormatters: [
             if (widget.isMoneyFormatter) MoneyTextInputFormatter(),
             if (widget.isUpperCase) UpperCaseTextFormatter(),
             // if (widget.isNumber) FilteringTextInputFormatter.digitsOnly,
             if (widget.isNumber) FilteringTextInputFormatter.allow(RegExp(r'[0-9.-]')),
             if (widget.isNumber)
-              TextInputFormatter.withFunction((oldValue, newValue) => newValue.text.isEmpty || double.tryParse(newValue.text) != null ? newValue : oldValue),
+              TextInputFormatter.withFunction((oldValue, newValue) =>
+                  newValue.text.isEmpty || double.tryParse(newValue.text) != null ? newValue : oldValue),
           ],
           onChanged: (value) {
             if (widget.onChanged != null) widget.onChanged!(value);
+          },
+          onTap: () {
+            if (widget.onTap != null) widget.onTap!(widget.controller.text);
           },
           minLines: widget.multiline ? 2 : 1,
           maxLines: widget.multiline ? 5 : 1,
@@ -171,11 +233,17 @@ class _CustomTextboxState extends State<CustomTextbox> {
           textCapitalization: widget.capitalization,
           style: TextStyle(
               fontSize: widget.fontSize,
-              color: Theme.of(context).brightness == Brightness.dark ? Color.fromARGB(255, 218, 218, 218) : Color.fromARGB(255, 71, 71, 71)),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Color.fromARGB(255, 218, 218, 218)
+                  : Color.fromARGB(255, 71, 71, 71),
+              fontWeight: widget.fontWeight),
           decoration: InputDecoration(
-            // isDense: true,
+            isDense: widget.compact,
             suffixIconConstraints: const BoxConstraints(maxHeight: 35, maxWidth: 45),
-
+            label: widget.showFloatingLabel ? label : null,
+            floatingLabelBehavior:
+                widget.alwaysShowFloatingLabel ? FloatingLabelBehavior.always : FloatingLabelBehavior.auto,
+            prefixIcon: widget.prefixIcon,
             suffixIcon: widget.suffixIcon ??
                 (widget.keyboardtype == TextInputType.datetime
                     ? Material(
@@ -188,7 +256,8 @@ class _CustomTextboxState extends State<CustomTextbox> {
                               color: Colors.blue,
                               size: 20,
                             ),
-                            style: IconButton.styleFrom(shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
+                            style: IconButton.styleFrom(
+                                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
                             onPressed: () {
                               if (widget.disableSuffixButtonClick) return;
                               var dt = DateTime.now();
@@ -225,7 +294,8 @@ class _CustomTextboxState extends State<CustomTextbox> {
                                 },
                               ).then((value) {
                                 if (value != null) {
-                                  widget.controller.text = DateFormat(CommonWidgetConfig.dateFormatString).format(value);
+                                  widget.controller.text =
+                                      DateFormat(CommonWidgetConfig.dateFormatString).format(value);
                                 }
                               });
                             },
@@ -233,20 +303,29 @@ class _CustomTextboxState extends State<CustomTextbox> {
                         ),
                       )
                     : null),
-
             hintText: widget.hintText,
             hintStyle: const TextStyle(color: Color.fromARGB(255, 108, 108, 108)),
-            fillColor: widget.enabled
-                ? (widget.backgroundColor ?? (Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 69, 69, 69) : Colors.white))
-                : Colors.grey,
+            fillColor: widget.readOnly
+                ? (widget.backgroundColor ??
+                    (Theme.of(context).brightness == Brightness.dark
+                        ? const Color.fromARGB(255, 99, 99, 99)
+                        : const Color.fromARGB(255, 241, 241, 241)))
+                : widget.enabled
+                    ? (widget.backgroundColor ??
+                        (Theme.of(context).brightness == Brightness.dark
+                            ? const Color.fromARGB(255, 69, 69, 69)
+                            : Colors.white))
+                    : Colors.grey,
             filled: true,
             isCollapsed: true,
-            contentPadding: widget.padding ?? const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+            contentPadding: widget.compact
+                ? const EdgeInsets.all(8)
+                : widget.padding ?? const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.all(
                 Radius.circular(widget.borderRadius ?? 5),
               ),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 width: 0.1,
                 color: Colors.grey,
               ),
@@ -255,7 +334,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
               borderRadius: BorderRadius.all(
                 Radius.circular(widget.borderRadius ?? 5),
               ),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 width: 0.1,
                 color: Colors.grey,
               ),
@@ -264,14 +343,14 @@ class _CustomTextboxState extends State<CustomTextbox> {
               borderRadius: BorderRadius.all(
                 Radius.circular(widget.borderRadius ?? 5),
               ),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 width: 1,
                 color: Color.fromARGB(255, 148, 148, 148),
               ),
             ),
           ),
         ),
-        SizedBox(height: widget.endPadding),
+        if (!widget.compact) SizedBox(height: widget.endPadding),
       ],
     );
   }

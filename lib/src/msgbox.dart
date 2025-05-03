@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'fixed_panel.dart';
 
-msgBox({required String title, required String message, required Map<String, IconData> buttons, required BuildContext context}) {
+msgBox(
+    {required String title,
+    required String message,
+    required Map<String, IconData> buttons,
+    required BuildContext context}) {
   // Widget okButton = ElevatedButton.icon(
   //   icon: const Icon(Icons.keyboard_option_key),
   //   label: const Text("YES"),
@@ -46,6 +50,7 @@ msgBoxOkOnly({required BuildContext context, required String title, required Str
           content: FixedPanelTop(
             topPanelHeight: 57,
             topChild: AppBar(
+              centerTitle: true,
               title: Text(title),
               automaticallyImplyLeading: false,
             ),
@@ -57,6 +62,7 @@ msgBoxOkOnly({required BuildContext context, required String title, required Str
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     ElevatedButton(
+                      autofocus: true,
                       onPressed: () {
                         Navigator.pop(cnt);
                       },

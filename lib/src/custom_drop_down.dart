@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'globals.dart';
 
@@ -93,13 +94,15 @@ class _CustomDropDownState extends State<CustomDropDown> {
       return widget.datasource.indexWhere((element) => element[widget.valueMember] == selectedValue);
     };
     widget.controller?.isValid = (dynamic value) {
-      List<Map> tmp = widget.datasource.where((element) => element[widget.valueMember].toString() == value.toString()).toList();
+      List<Map> tmp =
+          widget.datasource.where((element) => element[widget.valueMember].toString() == value.toString()).toList();
       return tmp.isNotEmpty;
     };
     if (widget.datasource.isNotEmpty) selectedValue = widget.datasource.first[widget.valueMember]?.toString() ?? "";
     if (widget.datasource.isNotEmpty) selectedText = widget.datasource.first[widget.displayMember]?.toString() ?? "";
     if (widget.controller != null) {
-      if (widget.controller!.text.isNotEmpty || (widget.controller!.selectedValue != null && widget.controller!.selectedValue.toString().isNotEmpty)) {
+      if (widget.controller!.text.isNotEmpty ||
+          (widget.controller!.selectedValue != null && widget.controller!.selectedValue.toString().isNotEmpty)) {
         loadvalue();
       } else {
         widget.controller!.text = selectedText;
@@ -119,7 +122,9 @@ class _CustomDropDownState extends State<CustomDropDown> {
       }
     }
     if (widget.defaultValue != null) {
-      List<Map> tmp = widget.datasource.where((element) => element[widget.valueMember].toString() == widget.defaultValue.toString()).toList();
+      List<Map> tmp = widget.datasource
+          .where((element) => element[widget.valueMember].toString() == widget.defaultValue.toString())
+          .toList();
       if (tmp.isNotEmpty) {
         selectedValue = widget.defaultValue!;
         selectedText = tmp.first[widget.displayMember] ?? "";
@@ -132,7 +137,9 @@ class _CustomDropDownState extends State<CustomDropDown> {
       {
         if (selectedValue != widget.controller!.selectedValue && (widget.controller!.selectedValue != null)) {
           try {
-            List<Map> tmp = widget.datasource.where((element) => element[widget.valueMember].toString() == widget.controller!.selectedValue).toList();
+            List<Map> tmp = widget.datasource
+                .where((element) => element[widget.valueMember].toString() == widget.controller!.selectedValue)
+                .toList();
             if (tmp.isNotEmpty) {
               var rr = tmp.first[widget.valueMember];
               selectedValue = rr.toString();
@@ -166,6 +173,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
     }
   }
 
+  FocusNode keyboardFn = FocusNode();
   @override
   Widget build(BuildContext context) {
     // Color borderColor = Theme.of(context).brightness == Brightness.dark
@@ -184,7 +192,9 @@ class _CustomDropDownState extends State<CustomDropDown> {
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 209, 209, 209) : const Color.fromARGB(255, 86, 86, 86),
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? const Color.fromARGB(255, 209, 209, 209)
+                      : const Color.fromARGB(255, 86, 86, 86),
                 ),
                 children: [
                   TextSpan(
@@ -221,120 +231,162 @@ class _CustomDropDownState extends State<CustomDropDown> {
             //     end: Alignment.bottomCenter),
             gradient: LinearGradient(
                 colors: Theme.of(context).brightness == Brightness.dark
-                    ? [const Color.fromARGB(255, 56, 56, 56), const Color.fromARGB(255, 73, 73, 73), const Color.fromARGB(255, 87, 87, 87)]
-                    : [const Color.fromARGB(255, 238, 237, 237), const Color.fromARGB(255, 230, 229, 229), const Color.fromARGB(255, 226, 228, 236)],
+                    ? [
+                        const Color.fromARGB(255, 56, 56, 56),
+                        const Color.fromARGB(255, 73, 73, 73),
+                        const Color.fromARGB(255, 87, 87, 87)
+                      ]
+                    : [
+                        const Color.fromARGB(255, 238, 237, 237),
+                        const Color.fromARGB(255, 230, 229, 229),
+                        const Color.fromARGB(255, 226, 228, 236)
+                      ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter),
             borderRadius: BorderRadius.circular(5),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 2),
-          child: DropdownButtonFormField(
-            // height: 100,
-            // icon: Icon(Icons.downhill_skiing),
-            focusNode: fc,
-            isExpanded: true,
-            isDense: true,
-            autofocus: widget.autoFocus,
-            borderRadius: BorderRadius.circular(10),
-            style: TextStyle(
-              color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
-              fontSize: widget.fontSize,
-            ),
-            decoration: const InputDecoration(
-              enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.transparent, width: 0)),
-              focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.transparent, width: 0)),
-              errorBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.transparent, width: 0)),
-              disabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.transparent, width: 0)),
-              focusedErrorBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.transparent, width: 0)),
-              border: UnderlineInputBorder(borderSide: BorderSide(color: Colors.transparent, width: 0)),
-              isCollapsed: true,
-              // contentPadding: EdgeInsets.zero,
-            ),
-            padding: EdgeInsets.symmetric(vertical: (widget.fontSize / 2) - 3, horizontal: 0),
+          child: KeyboardListener(
+            focusNode: keyboardFn,
+            onKeyEvent: (value) {
+              if (value is KeyDownEvent) {
+                // downKey = value.physicalKey;
+              }
+              if (value is KeyUpEvent && value.character != null) {
+                var index = (widget.controller?.getSelectedIndex() ?? 0) + 1;
 
-            validator: (value) {
-              if (widget.required) {
-                if ((value?.toString() ?? "").trim().isEmpty || (widget.wrongValues != null && widget.wrongValues!.contains(value))) {
-                  if (!focusRequested) {
-                    fc.requestFocus();
-                    focusRequested = true;
+                if (selectedText.startsWith(value.character ?? "")) {
+                  index += 1;
+                  if (index >= widget.datasource.length) {
+                    index = widget.datasource
+                        .indexWhere((e) => e[widget.displayMember].toString().startsWith(value.character ?? ""));
                   }
-                  return "** required field";
+                  widget.controller?.selectItem(index);
+                } else {
+                  index = widget.datasource
+                      .indexWhere((e) => e[widget.displayMember].toString().startsWith(value.character ?? ""));
+                  if (index < widget.datasource.length && index >= 0) {
+                    widget.controller?.selectItem(index);
+                  }
+                }
+              }
+            },
+            child: DropdownButtonFormField(
+              // height: 100,
+              // icon: Icon(Icons.downhill_skiing),
+              focusNode: fc,
+              isExpanded: true,
+              isDense: true,
+              autofocus: widget.autoFocus,
+              borderRadius: BorderRadius.circular(10),
+              style: TextStyle(
+                color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
+                fontSize: widget.fontSize,
+              ),
+              decoration: const InputDecoration(
+                enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.transparent, width: 0)),
+                focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.transparent, width: 0)),
+                errorBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.transparent, width: 0)),
+                disabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.transparent, width: 0)),
+                focusedErrorBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.transparent, width: 0)),
+                border: UnderlineInputBorder(borderSide: BorderSide(color: Colors.transparent, width: 0)),
+                isCollapsed: true,
+                // contentPadding: EdgeInsets.zero,
+              ),
+              padding: EdgeInsets.symmetric(vertical: (widget.fontSize / 2) - 3, horizontal: 0),
+
+              validator: (value) {
+                if (widget.required) {
+                  if ((value?.toString() ?? "").trim().isEmpty ||
+                      (widget.wrongValues != null && widget.wrongValues!.contains(value))) {
+                    if (!focusRequested) {
+                      fc.requestFocus();
+                      focusRequested = true;
+                    }
+                    return "** required field";
+                  } else {
+                    return null;
+                  }
                 } else {
                   return null;
                 }
-              } else {
-                return null;
-              }
-            },
-            // underline: Container(),
-            items: widget.datasource
-                .map((e) => DropdownMenuItem(
-                      // onTap: () {
-                      //   bool value = !selectedItems.contains(e[widget.valueMember]?.toString() ?? "");
-                      //   selectedItems.removeWhere((element) => element == (e[widget.valueMember]?.toString() ?? ""));
-                      //   if (value) {
-                      //     selectedItems.add(e[widget.valueMember]?.toString() ?? "");
-                      //   }
-                      //   print(selectedItems);
-                      // },
-                      value: e[widget.valueMember]?.toString() ?? "",
-                      child: Row(
-                        children: [
-                          if (widget.multiSelect)
-                            StatefulBuilder(builder: (context, setState2) {
-                              return Checkbox(
-                                  value: selectedItems.contains(e[widget.valueMember]?.toString() ?? ""),
-                                  onChanged: (value) {
-                                    selectedItems.removeWhere((element) => element == (e[widget.valueMember]?.toString() ?? ""));
-                                    if (value ?? false) {
-                                      selectedItems.add(e[widget.valueMember]?.toString() ?? "");
-                                    }
-                                    if (widget.onChanged != null) {
-                                      widget.onChanged!(selectedValue, selectedText);
-                                    }
-                                    setState2(() {});
-                                    print(selectedItems);
-                                  });
-                            }),
-                          Expanded(
-                            child: Text(
-                              e[widget.displayMember]?.toString() ?? "",
-                              style: TextStyle(
-                                color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
-                                fontSize: widget.fontSize,
+              },
+              // underline: Container(),
+              items: widget.datasource
+                  .map((e) => DropdownMenuItem(
+                        // onTap: () {
+                        //   bool value = !selectedItems.contains(e[widget.valueMember]?.toString() ?? "");
+                        //   selectedItems.removeWhere((element) => element == (e[widget.valueMember]?.toString() ?? ""));
+                        //   if (value) {
+                        //     selectedItems.add(e[widget.valueMember]?.toString() ?? "");
+                        //   }
+                        //   print(selectedItems);
+                        // },
+                        value: e[widget.valueMember]?.toString() ?? "",
+                        child: Row(
+                          children: [
+                            if (widget.multiSelect)
+                              StatefulBuilder(builder: (context, setState2) {
+                                return Checkbox(
+                                    value: selectedItems.contains(e[widget.valueMember]?.toString() ?? ""),
+                                    onChanged: (value) {
+                                      selectedItems.removeWhere(
+                                          (element) => element == (e[widget.valueMember]?.toString() ?? ""));
+                                      if (value ?? false) {
+                                        selectedItems.add(e[widget.valueMember]?.toString() ?? "");
+                                      }
+                                      if (widget.onChanged != null) {
+                                        widget.onChanged!(selectedValue, selectedText);
+                                      }
+                                      setState2(() {});
+                                      print(selectedItems);
+                                    });
+                              }),
+                            Expanded(
+                              child: Text(
+                                e[widget.displayMember]?.toString() ?? "",
+                                style: TextStyle(
+                                  color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
+                                  fontSize: widget.fontSize,
+                                ),
+                                maxLines: 2,
                               ),
-                              maxLines: 2,
                             ),
-                          ),
-                        ],
-                      ),
-                    ))
-                .toList(),
-            value: widget.multiSelect
-                ? widget.datasource.first[widget.valueMember]?.toString() ?? ""
-                : widget.datasource.where((element) => element[widget.valueMember].toString() == selectedValue).isEmpty
-                    ? widget.datasource.first[widget.valueMember]?.toString() ?? ""
-                    : selectedValue,
+                          ],
+                        ),
+                      ))
+                  .toList(),
+              value: widget.multiSelect
+                  ? widget.datasource.first[widget.valueMember]?.toString() ?? ""
+                  : widget.datasource
+                          .where((element) => element[widget.valueMember].toString() == selectedValue)
+                          .isEmpty
+                      ? widget.datasource.first[widget.valueMember]?.toString() ?? ""
+                      : selectedValue,
 
-            onChanged: (value) {
-              if (!widget.multiSelect) {
-                selectedValue = value.toString();
-                selectedText =
-                    widget.datasource.where((element) => element[widget.valueMember].toString() == selectedValue).first[widget.displayMember]?.toString() ?? "";
+              onChanged: (value) {
+                if (!widget.multiSelect) {
+                  selectedValue = value.toString();
+                  selectedText = widget.datasource
+                          .where((element) => element[widget.valueMember].toString() == selectedValue)
+                          .first[widget.displayMember]
+                          ?.toString() ??
+                      "";
 
-                if (widget.controller != null) {
-                  if (selectedValue != widget.controller!.selectedValue && widget.controller!.selectedValue.isNotEmpty) {
-                    widget.controller!.text = selectedText;
-                    widget.controller!.selectedValue = selectedValue;
+                  if (widget.controller != null) {
+                    if (selectedValue != widget.controller!.selectedValue &&
+                        widget.controller!.selectedValue.isNotEmpty) {
+                      widget.controller!.text = selectedText;
+                      widget.controller!.selectedValue = selectedValue;
+                    }
                   }
+                  if (mounted) setState(() {});
                 }
-                if (mounted) setState(() {});
-              }
-              if (widget.onChanged != null) {
-                widget.onChanged!(selectedValue, selectedText);
-              }
-            },
+                if (widget.onChanged != null) {
+                  widget.onChanged!(selectedValue, selectedText);
+                }
+              },
+            ),
           ),
         ),
         SizedBox(height: widget.endPadding),
