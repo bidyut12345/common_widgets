@@ -49,9 +49,11 @@ class CustomButton extends StatelessWidget {
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(
             padding: padding,
-            backgroundColor:
-                backcolor ?? (Theme.of(context).brightness == Brightness.dark ? Color.fromARGB(255, 53, 56, 82) : const Color.fromARGB(255, 128, 136, 214)),
-            minimumSize: const Size(double.infinity, 60),
+            backgroundColor: backcolor ??
+                (Theme.of(context).brightness == Brightness.dark
+                    ? const Color.fromARGB(255, 53, 56, 82)
+                    : const Color.fromARGB(255, 128, 136, 214)),
+            // minimumSize: const Size(double.infinity, 10),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius)),
             alignment: alignment,
           ),
@@ -71,7 +73,10 @@ class CustomButton extends StatelessWidget {
                   text,
                   softWrap: true,
                   style: TextStyle(
-                    color: forecolor ?? (Theme.of(context).brightness == Brightness.dark ? Colors.white : Color.fromARGB(255, 228, 228, 228)),
+                    color: forecolor ??
+                        (Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Color.fromARGB(255, 228, 228, 228)),
                     fontSize: fontSize,
                   ),
                   textAlign: [Alignment.topLeft, Alignment.bottomLeft, Alignment.centerLeft].contains(alignment)

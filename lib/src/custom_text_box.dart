@@ -31,7 +31,7 @@ class CustomTextbox extends StatefulWidget {
     this.enabled = true,
     this.isUpperCase = false,
     this.isNumber = false,
-    this.enableInteractiveSelection = false,
+    this.enableInteractiveSelection = true,
     this.height,
     this.padding,
     this.backgroundColor,
@@ -130,6 +130,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
   Widget build(BuildContext context) {
     var label = RichText(
       textAlign: TextAlign.left,
+      softWrap: false,
       text: TextSpan(
         style: TextStyle(
           fontSize: 12,
@@ -325,18 +326,22 @@ class _CustomTextboxState extends State<CustomTextbox> {
               borderRadius: BorderRadius.all(
                 Radius.circular(widget.borderRadius ?? 5),
               ),
-              borderSide: const BorderSide(
-                width: 0.1,
-                color: Colors.grey,
+              borderSide: BorderSide(
+                width: 1,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? const Color.fromARGB(255, 218, 218, 218)
+                    : const Color.fromARGB(255, 177, 177, 177),
               ),
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.all(
                 Radius.circular(widget.borderRadius ?? 5),
               ),
-              borderSide: const BorderSide(
-                width: 0.1,
-                color: Colors.grey,
+              borderSide: BorderSide(
+                width: 1,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Color.fromARGB(255, 218, 218, 218)
+                    : const Color.fromARGB(255, 126, 126, 126),
               ),
             ),
             focusedBorder: OutlineInputBorder(
@@ -345,7 +350,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
               ),
               borderSide: const BorderSide(
                 width: 1,
-                color: Color.fromARGB(255, 148, 148, 148),
+                color: Color.fromARGB(255, 247, 41, 41),
               ),
             ),
           ),

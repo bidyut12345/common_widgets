@@ -38,9 +38,11 @@ msgBox(
   );
 }
 
-msgBoxOkOnly({required BuildContext context, required String title, required String message, Function? onComplete}) {
+msgBoxOkOnly(
+    {required BuildContext context, required String title, required String message, Function? onComplete}) async {
+  if (!context.mounted) return;
   var sc = ScrollController();
-  showDialog(
+  await showDialog(
       context: context,
       useRootNavigator: false,
       builder: (cnt) {
@@ -104,9 +106,8 @@ msgBoxOkOnly({required BuildContext context, required String title, required Str
             ),
           ),
         );
-      }).then((value) {
-    if (onComplete != null) onComplete();
-  });
+      });
+  if (onComplete != null) onComplete();
 }
 
 Future<dynamic> msgBoxOkOnlyFuture({required BuildContext context, required String title, required String message}) {
