@@ -99,12 +99,12 @@ class CustomTextbox extends StatefulWidget {
 
 class _CustomTextboxState extends State<CustomTextbox> {
   late FocusNode fc;
-  late FocusNode fcKeyboard;
+  // late FocusNode fcKeyboard;
   @override
   void initState() {
     super.initState();
     fc = widget.focusNode ?? FocusNode();
-    fcKeyboard = FocusNode();
+    // fcKeyboard = FocusNode();
     fc.addListener(() {
       if (fc.hasFocus) {
         if (widget.onFocused != null) {
@@ -135,9 +135,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
         style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.bold,
-          color: Theme.of(context).brightness == Brightness.dark
-              ? const Color.fromARGB(255, 209, 209, 209)
-              : const Color.fromARGB(255, 86, 86, 86),
+          color: Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 209, 209, 209) : const Color.fromARGB(255, 86, 86, 86),
           // color: Color.fromARGB(255, 86, 86, 86),
         ),
         children: [
@@ -184,7 +182,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
         // ),
         TextFormField(
           autofocus: widget.autofocus,
-          // focusNode: fc,
+          focusNode: fc,
           readOnly: widget.readOnly,
           enableInteractiveSelection: widget.enableInteractiveSelection,
           controller: widget.controller,
@@ -204,8 +202,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
             // if (widget.isNumber) FilteringTextInputFormatter.digitsOnly,
             if (widget.isNumber) FilteringTextInputFormatter.allow(RegExp(r'[0-9.-]')),
             if (widget.isNumber)
-              TextInputFormatter.withFunction((oldValue, newValue) =>
-                  newValue.text.isEmpty || double.tryParse(newValue.text) != null ? newValue : oldValue),
+              TextInputFormatter.withFunction((oldValue, newValue) => newValue.text.isEmpty || double.tryParse(newValue.text) != null ? newValue : oldValue),
           ],
           onChanged: (value) {
             if (widget.onChanged != null) widget.onChanged!(value);
@@ -234,16 +231,13 @@ class _CustomTextboxState extends State<CustomTextbox> {
           textCapitalization: widget.capitalization,
           style: TextStyle(
               fontSize: widget.fontSize,
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Color.fromARGB(255, 218, 218, 218)
-                  : Color.fromARGB(255, 71, 71, 71),
+              color: Theme.of(context).brightness == Brightness.dark ? Color.fromARGB(255, 218, 218, 218) : Color.fromARGB(255, 71, 71, 71),
               fontWeight: widget.fontWeight),
           decoration: InputDecoration(
             isDense: widget.compact,
             suffixIconConstraints: const BoxConstraints(maxHeight: 35, maxWidth: 45),
             label: widget.showFloatingLabel ? label : null,
-            floatingLabelBehavior:
-                widget.alwaysShowFloatingLabel ? FloatingLabelBehavior.always : FloatingLabelBehavior.auto,
+            floatingLabelBehavior: widget.alwaysShowFloatingLabel ? FloatingLabelBehavior.always : FloatingLabelBehavior.auto,
             prefixIcon: widget.prefixIcon,
             suffixIcon: widget.suffixIcon ??
                 (widget.keyboardtype == TextInputType.datetime
@@ -257,8 +251,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
                               color: Colors.blue,
                               size: 20,
                             ),
-                            style: IconButton.styleFrom(
-                                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
+                            style: IconButton.styleFrom(shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
                             onPressed: () {
                               if (widget.disableSuffixButtonClick) return;
                               var dt = DateTime.now();
@@ -295,8 +288,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
                                 },
                               ).then((value) {
                                 if (value != null) {
-                                  widget.controller.text =
-                                      DateFormat(CommonWidgetConfig.dateFormatString).format(value);
+                                  widget.controller.text = DateFormat(CommonWidgetConfig.dateFormatString).format(value);
                                 }
                               });
                             },
@@ -308,29 +300,20 @@ class _CustomTextboxState extends State<CustomTextbox> {
             hintStyle: const TextStyle(color: Color.fromARGB(255, 108, 108, 108)),
             fillColor: widget.readOnly
                 ? (widget.backgroundColor ??
-                    (Theme.of(context).brightness == Brightness.dark
-                        ? const Color.fromARGB(255, 99, 99, 99)
-                        : const Color.fromARGB(255, 241, 241, 241)))
+                    (Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 99, 99, 99) : const Color.fromARGB(255, 241, 241, 241)))
                 : widget.enabled
-                    ? (widget.backgroundColor ??
-                        (Theme.of(context).brightness == Brightness.dark
-                            ? const Color.fromARGB(255, 69, 69, 69)
-                            : Colors.white))
+                    ? (widget.backgroundColor ?? (Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 69, 69, 69) : Colors.white))
                     : Colors.grey,
             filled: true,
             isCollapsed: true,
-            contentPadding: widget.compact
-                ? const EdgeInsets.all(8)
-                : widget.padding ?? const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+            contentPadding: widget.compact ? const EdgeInsets.all(8) : widget.padding ?? const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.all(
                 Radius.circular(widget.borderRadius ?? 5),
               ),
               borderSide: BorderSide(
                 width: 1,
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? const Color.fromARGB(255, 218, 218, 218)
-                    : const Color.fromARGB(255, 177, 177, 177),
+                color: Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 218, 218, 218) : const Color.fromARGB(255, 177, 177, 177),
               ),
             ),
             border: OutlineInputBorder(
@@ -339,9 +322,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
               ),
               borderSide: BorderSide(
                 width: 1,
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Color.fromARGB(255, 218, 218, 218)
-                    : const Color.fromARGB(255, 126, 126, 126),
+                color: Theme.of(context).brightness == Brightness.dark ? Color.fromARGB(255, 218, 218, 218) : const Color.fromARGB(255, 126, 126, 126),
               ),
             ),
             focusedBorder: OutlineInputBorder(

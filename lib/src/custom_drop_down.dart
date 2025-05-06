@@ -47,6 +47,7 @@ class CustomDropDown extends StatefulWidget {
     this.wrongValues,
     this.multiSelect = false,
     this.fontSize = 14,
+    this.onEnterPressed,
   });
 
   final DropDownController? controller;
@@ -62,6 +63,7 @@ class CustomDropDown extends StatefulWidget {
   final double endPadding;
   final bool multiSelect;
   final double fontSize;
+  final Function()? onEnterPressed;
 
   final Function(String value, String text)? onChanged;
 
@@ -71,6 +73,7 @@ class CustomDropDown extends StatefulWidget {
 
 class _CustomDropDownState extends State<CustomDropDown> {
   FocusNode fc = FocusNode();
+  // FocusNode keyboardFn = FocusNode();
   String selectedValue = "";
   String selectedText = "";
   List<String> selectedItems = [];
@@ -91,18 +94,16 @@ class _CustomDropDownState extends State<CustomDropDown> {
       setState(() {});
     };
     widget.controller?.getSelectedIndex = () {
-      return widget.datasource.indexWhere((element) => element[widget.valueMember] == selectedValue);
+      return widget.datasource.indexWhere((element) => element[widget.valueMember].toString() == selectedValue.toString());
     };
     widget.controller?.isValid = (dynamic value) {
-      List<Map> tmp =
-          widget.datasource.where((element) => element[widget.valueMember].toString() == value.toString()).toList();
+      List<Map> tmp = widget.datasource.where((element) => element[widget.valueMember].toString() == value.toString()).toList();
       return tmp.isNotEmpty;
     };
     if (widget.datasource.isNotEmpty) selectedValue = widget.datasource.first[widget.valueMember]?.toString() ?? "";
     if (widget.datasource.isNotEmpty) selectedText = widget.datasource.first[widget.displayMember]?.toString() ?? "";
     if (widget.controller != null) {
-      if (widget.controller!.text.isNotEmpty ||
-          (widget.controller!.selectedValue != null && widget.controller!.selectedValue.toString().isNotEmpty)) {
+      if (widget.controller!.text.isNotEmpty || (widget.controller!.selectedValue != null && widget.controller!.selectedValue.toString().isNotEmpty)) {
         loadvalue();
       } else {
         widget.controller!.text = selectedText;
@@ -122,9 +123,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
       }
     }
     if (widget.defaultValue != null) {
-      List<Map> tmp = widget.datasource
-          .where((element) => element[widget.valueMember].toString() == widget.defaultValue.toString())
-          .toList();
+      List<Map> tmp = widget.datasource.where((element) => element[widget.valueMember].toString() == widget.defaultValue.toString()).toList();
       if (tmp.isNotEmpty) {
         selectedValue = widget.defaultValue!;
         selectedText = tmp.first[widget.displayMember] ?? "";
@@ -137,9 +136,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
       {
         if (selectedValue != widget.controller!.selectedValue && (widget.controller!.selectedValue != null)) {
           try {
-            List<Map> tmp = widget.datasource
-                .where((element) => element[widget.valueMember].toString() == widget.controller!.selectedValue)
-                .toList();
+            List<Map> tmp = widget.datasource.where((element) => element[widget.valueMember].toString() == widget.controller!.selectedValue).toList();
             if (tmp.isNotEmpty) {
               var rr = tmp.first[widget.valueMember];
               selectedValue = rr.toString();
@@ -173,7 +170,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
     }
   }
 
-  FocusNode keyboardFn = FocusNode();
+  PhysicalKeyboardKey? enteredKey;
   @override
   Widget build(BuildContext context) {
     // Color borderColor = Theme.of(context).brightness == Brightness.dark
@@ -192,9 +189,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? const Color.fromARGB(255, 209, 209, 209)
-                      : const Color.fromARGB(255, 86, 86, 86),
+                  color: Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 209, 209, 209) : const Color.fromARGB(255, 86, 86, 86),
                 ),
                 children: [
                   TextSpan(
@@ -231,50 +226,95 @@ class _CustomDropDownState extends State<CustomDropDown> {
             //     end: Alignment.bottomCenter),
             gradient: LinearGradient(
                 colors: Theme.of(context).brightness == Brightness.dark
-                    ? [
-                        const Color.fromARGB(255, 56, 56, 56),
-                        const Color.fromARGB(255, 73, 73, 73),
-                        const Color.fromARGB(255, 87, 87, 87)
-                      ]
-                    : [
-                        const Color.fromARGB(255, 238, 237, 237),
-                        const Color.fromARGB(255, 230, 229, 229),
-                        const Color.fromARGB(255, 226, 228, 236)
-                      ],
+                    ? [const Color.fromARGB(255, 56, 56, 56), const Color.fromARGB(255, 73, 73, 73), const Color.fromARGB(255, 87, 87, 87)]
+                    : [const Color.fromARGB(255, 238, 237, 237), const Color.fromARGB(255, 230, 229, 229), const Color.fromARGB(255, 226, 228, 236)],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter),
             borderRadius: BorderRadius.circular(5),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 2),
-          child: KeyboardListener(
-            focusNode: keyboardFn,
-            onKeyEvent: (value) {
+          child: Focus(
+            focusNode: fc,
+            autofocus: widget.autoFocus,
+            descendantsAreFocusable: true,
+            descendantsAreTraversable: false,
+            onKeyEvent: (fc, value) {
               if (value is KeyDownEvent) {
                 // downKey = value.physicalKey;
+                enteredKey = value.physicalKey;
+                if (value.physicalKey == PhysicalKeyboardKey.enter) {
+                  return KeyEventResult.handled;
+                }
+                if (value.physicalKey == PhysicalKeyboardKey.numpadEnter) {
+                  return KeyEventResult.handled;
+                }
+                if (value.physicalKey == PhysicalKeyboardKey.escape) {
+                  return KeyEventResult.ignored;
+                }
+                if (value.physicalKey == PhysicalKeyboardKey.tab) {
+                  return KeyEventResult.ignored;
+                }
+                return KeyEventResult.handled;
               }
-              if (value is KeyUpEvent && value.character != null) {
-                var index = (widget.controller?.getSelectedIndex() ?? 0) + 1;
-
-                if (selectedText.startsWith(value.character ?? "")) {
-                  index += 1;
-                  if (index >= widget.datasource.length) {
-                    index = widget.datasource
-                        .indexWhere((e) => e[widget.displayMember].toString().startsWith(value.character ?? ""));
+              if (value is KeyUpEvent) {
+                if (value.physicalKey != enteredKey) return KeyEventResult.handled;
+                enteredKey = null;
+                if (value.physicalKey == PhysicalKeyboardKey.enter) {
+                  widget.onEnterPressed?.call();
+                  return KeyEventResult.handled;
+                }
+                if (value.physicalKey == PhysicalKeyboardKey.numpadEnter) {
+                  widget.onEnterPressed?.call();
+                  return KeyEventResult.handled;
+                }
+                if (value.physicalKey == PhysicalKeyboardKey.escape) {
+                  return KeyEventResult.ignored;
+                }
+                if (value.physicalKey == PhysicalKeyboardKey.tab) {
+                  return KeyEventResult.ignored;
+                }
+                var index = (widget.controller?.getSelectedIndex() ?? 0);
+                if (value.physicalKey == PhysicalKeyboardKey.arrowUp) {
+                  index -= 1;
+                  if (index < 0) {
+                    index = widget.datasource.length - 1;
                   }
                   widget.controller?.selectItem(index);
+                }
+                if (value.physicalKey == PhysicalKeyboardKey.arrowDown) {
+                  index += 1;
+                  if (index >= widget.datasource.length) {
+                    index = 0;
+                  }
+                  widget.controller?.selectItem(index);
+                }
+                if (value.logicalKey.keyLabel.length > 1) return KeyEventResult.handled;
+                if (selectedText.startsWith(value.logicalKey.keyLabel)) {
+                  index += 1;
+                  if (index >= widget.datasource.length) {
+                    index = widget.datasource.indexWhere((e) => e[widget.displayMember].toString().startsWith(value.logicalKey.keyLabel));
+                  }
+                  widget.controller?.selectItem(index);
+                  if (!selectedText.startsWith(value.logicalKey.keyLabel)) {
+                    index = widget.datasource.indexWhere((e) => e[widget.displayMember].toString().startsWith(value.logicalKey.keyLabel));
+                    if (index < widget.datasource.length && index >= 0) {
+                      widget.controller?.selectItem(index);
+                    }
+                  }
                 } else {
-                  index = widget.datasource
-                      .indexWhere((e) => e[widget.displayMember].toString().startsWith(value.character ?? ""));
+                  index = widget.datasource.indexWhere((e) => e[widget.displayMember].toString().startsWith(value.logicalKey.keyLabel));
                   if (index < widget.datasource.length && index >= 0) {
                     widget.controller?.selectItem(index);
                   }
                 }
+                return KeyEventResult.handled;
               }
+              return KeyEventResult.ignored;
             },
             child: DropdownButtonFormField(
               // height: 100,
               // icon: Icon(Icons.downhill_skiing),
-              focusNode: fc,
+              // focusNode: fc,
               isExpanded: true,
               isDense: true,
               autofocus: widget.autoFocus,
@@ -297,8 +337,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
 
               validator: (value) {
                 if (widget.required) {
-                  if ((value?.toString() ?? "").trim().isEmpty ||
-                      (widget.wrongValues != null && widget.wrongValues!.contains(value))) {
+                  if ((value?.toString() ?? "").trim().isEmpty || (widget.wrongValues != null && widget.wrongValues!.contains(value))) {
                     if (!focusRequested) {
                       fc.requestFocus();
                       focusRequested = true;
@@ -330,8 +369,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
                                 return Checkbox(
                                     value: selectedItems.contains(e[widget.valueMember]?.toString() ?? ""),
                                     onChanged: (value) {
-                                      selectedItems.removeWhere(
-                                          (element) => element == (e[widget.valueMember]?.toString() ?? ""));
+                                      selectedItems.removeWhere((element) => element == (e[widget.valueMember]?.toString() ?? ""));
                                       if (value ?? false) {
                                         selectedItems.add(e[widget.valueMember]?.toString() ?? "");
                                       }
@@ -358,24 +396,19 @@ class _CustomDropDownState extends State<CustomDropDown> {
                   .toList(),
               value: widget.multiSelect
                   ? widget.datasource.first[widget.valueMember]?.toString() ?? ""
-                  : widget.datasource
-                          .where((element) => element[widget.valueMember].toString() == selectedValue)
-                          .isEmpty
+                  : widget.datasource.where((element) => element[widget.valueMember].toString() == selectedValue).isEmpty
                       ? widget.datasource.first[widget.valueMember]?.toString() ?? ""
                       : selectedValue,
 
               onChanged: (value) {
                 if (!widget.multiSelect) {
                   selectedValue = value.toString();
-                  selectedText = widget.datasource
-                          .where((element) => element[widget.valueMember].toString() == selectedValue)
-                          .first[widget.displayMember]
-                          ?.toString() ??
-                      "";
+                  selectedText =
+                      widget.datasource.where((element) => element[widget.valueMember].toString() == selectedValue).first[widget.displayMember]?.toString() ??
+                          "";
 
                   if (widget.controller != null) {
-                    if (selectedValue != widget.controller!.selectedValue &&
-                        widget.controller!.selectedValue.isNotEmpty) {
+                    if (selectedValue != widget.controller!.selectedValue && widget.controller!.selectedValue.isNotEmpty) {
                       widget.controller!.text = selectedText;
                       widget.controller!.selectedValue = selectedValue;
                     }
