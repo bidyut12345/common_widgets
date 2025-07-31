@@ -26,35 +26,30 @@ class LoadingWidget extends StatelessWidget {
                           // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                           // clipBehavior: Clip.antiAlias,
                           child: Padding(
-                            padding: const EdgeInsets.all(15.0),
+                            padding: const EdgeInsets.all(30.0),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                if (kDebugMode)
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text(
-                                      "Loading...\n[Circularprogressbar is Hidden in DEBUG MODE]",
-                                      textAlign: TextAlign.center,
-                                    ),
+                                // if (kDebugMode)
+                                //   GestureDetector(
+                                //     onTap: () {
+                                //       Navigator.of(context).pop();
+                                //     },
+                                //     child: const Text(
+                                //       "Loading...\n[Circularprogressbar is Hidden in DEBUG MODE]",
+                                //       textAlign: TextAlign.center,
+                                //     ),
+                                //   ),
+                                // if (!kDebugMode)
+                                const SizedBox(
+                                  height: 60,
+                                  width: 60,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 8,
                                   ),
-                                if (!kDebugMode)
-                                  const SizedBox(
-                                    height: 100,
-                                    child: Center(
-                                      child: SizedBox(
-                                        height: 60,
-                                        width: 60,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 8,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                                ),
                                 if (LoadingController.instance!.loadingText.value != "") ...[
                                   const SizedBox(
                                     height: 20,
@@ -62,6 +57,7 @@ class LoadingWidget extends StatelessWidget {
                                   Text(
                                     LoadingController.instance!.loadingText.value,
                                     style: const TextStyle(fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.center,
                                   )
                                 ]
                               ],
