@@ -15,7 +15,7 @@ class LoadingController extends ChangeNotifier {
         builder: (contextd) {
           contexts.addAll({context: contextd});
           return AlertDialog(
-            title: Text("Dialog"),
+            title: Text("Loading"),
             content: Padding(
               padding: EdgeInsets.all(20),
               child: SizedBox(
