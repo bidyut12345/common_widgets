@@ -9,6 +9,7 @@ export 'src/custom_text_box.dart';
 export 'src/fixed_panel.dart';
 export 'src/loading_view.dart';
 export 'src/loading.dart';
+export 'src/loading_dialog.dart';
 export 'src/message_box.dart';
 export 'src/msgbox.dart';
 export 'src/my_dialog.dart';
