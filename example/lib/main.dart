@@ -71,7 +71,12 @@ class _MyHomePageState extends State<MyHomePage> {
               valueMember: "name",
               labelText: "test",
             ),
-            CustomTextbox(controller: TextEditingController(), labelText: "labelText", hintText: "hintText"),
+            CustomTextbox(
+              controller: TextEditingController(),
+              labelText: "labelText",
+              hintText: "hintText",
+              keyboardtype: TextInputType.datetime,
+            ),
             CustomDropDown(
               controller: ddl,
               datasource: const [

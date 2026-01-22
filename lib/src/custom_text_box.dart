@@ -1,9 +1,10 @@
 import 'package:common_widgets/src/input_formatters/uppercase_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:intl/intl.dart';
+// import 'package:intl/intl.dart';
 
 import 'common_widget_config.dart';
+import 'datetime_helper.dart';
 import 'globals.dart';
 import 'input_formatters/money_formatter.dart';
 import 'package:flutter/services.dart';
@@ -140,7 +141,9 @@ class _CustomTextboxState extends State<CustomTextbox> {
         style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.bold,
-          color: Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 209, 209, 209) : const Color.fromARGB(255, 86, 86, 86),
+          color: Theme.of(context).brightness == Brightness.dark
+              ? const Color.fromARGB(255, 209, 209, 209)
+              : const Color.fromARGB(255, 86, 86, 86),
           // color: Color.fromARGB(255, 86, 86, 86),
         ),
         children: [
@@ -238,7 +241,8 @@ class _CustomTextboxState extends State<CustomTextbox> {
               // if (widget.isNumber) FilteringTextInputFormatter.digitsOnly,
               if (widget.isNumber) FilteringTextInputFormatter.allow(RegExp(r'[0-9.-]')),
               if (widget.isNumber)
-                TextInputFormatter.withFunction((oldValue, newValue) => newValue.text.isEmpty || double.tryParse(newValue.text) != null ? newValue : oldValue),
+                TextInputFormatter.withFunction((oldValue, newValue) =>
+                    newValue.text.isEmpty || double.tryParse(newValue.text) != null ? newValue : oldValue),
             ],
             onChanged: (value) {
               if (widget.onChanged != null) widget.onChanged!(value);
@@ -267,13 +271,18 @@ class _CustomTextboxState extends State<CustomTextbox> {
             textCapitalization: widget.capitalization,
             style: TextStyle(
                 fontSize: widget.fontSize,
-                color: Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 218, 218, 218) : const Color.fromARGB(255, 71, 71, 71),
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? const Color.fromARGB(255, 218, 218, 218)
+                    : const Color.fromARGB(255, 71, 71, 71),
                 fontWeight: widget.fontWeight),
             decoration: InputDecoration(
               isDense: widget.compact,
-              suffixIconConstraints: widget.keyboardtype == TextInputType.datetime ? const BoxConstraints(maxHeight: 35, maxWidth: 45) : null,
+              suffixIconConstraints: widget.keyboardtype == TextInputType.datetime
+                  ? const BoxConstraints(maxHeight: 35, maxWidth: 45)
+                  : null,
               label: widget.showFloatingLabel ? label : null,
-              floatingLabelBehavior: widget.alwaysShowFloatingLabel ? FloatingLabelBehavior.always : FloatingLabelBehavior.auto,
+              floatingLabelBehavior:
+                  widget.alwaysShowFloatingLabel ? FloatingLabelBehavior.always : FloatingLabelBehavior.auto,
               prefixIcon: widget.prefixIcon,
               suffixIcon: widget.suffixIcon ??
                   (widget.keyboardtype == TextInputType.datetime
@@ -287,13 +296,14 @@ class _CustomTextboxState extends State<CustomTextbox> {
                                 color: Colors.blue,
                                 size: 20,
                               ),
-                              style: IconButton.styleFrom(shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
+                              style: IconButton.styleFrom(
+                                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
                               onPressed: () {
                                 if (widget.disableSuffixButtonClick) return;
                                 var dt = DateTime.now();
                                 try {
                                   dt = widget.controller.text.trim() != ''
-                                      ? DateFormat(CommonWidgetConfig.dateFormatString).parse(widget.controller.text)
+                                      ? parseDateTime(widget.controller.text, CommonWidgetConfig.dateFormatString)
                                       : DateTime.now();
                                 } catch (e) {}
                                 showDatePicker(
@@ -324,7 +334,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
                                   },
                                 ).then((value) {
                                   if (value != null) {
-                                    widget.controller.text = DateFormat(CommonWidgetConfig.dateFormatString).format(value);
+                                    widget.controller.text = formatDateTime(value, CommonWidgetConfig.dateFormatString);
                                     if (widget.onChanged != null) widget.onChanged!(widget.controller.text);
                                   }
                                 });
@@ -337,20 +347,29 @@ class _CustomTextboxState extends State<CustomTextbox> {
               hintStyle: const TextStyle(color: Color.fromARGB(255, 108, 108, 108)),
               fillColor: widget.readOnly
                   ? (widget.backgroundColor ??
-                      (Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 99, 99, 99) : const Color.fromARGB(255, 241, 241, 241)))
+                      (Theme.of(context).brightness == Brightness.dark
+                          ? const Color.fromARGB(255, 99, 99, 99)
+                          : const Color.fromARGB(255, 241, 241, 241)))
                   : widget.enabled
-                      ? (widget.backgroundColor ?? (Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 69, 69, 69) : Colors.white))
+                      ? (widget.backgroundColor ??
+                          (Theme.of(context).brightness == Brightness.dark
+                              ? const Color.fromARGB(255, 69, 69, 69)
+                              : Colors.white))
                       : Colors.grey,
               filled: true,
               isCollapsed: true,
-              contentPadding: widget.compact ? const EdgeInsets.all(8) : widget.padding ?? const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+              contentPadding: widget.compact
+                  ? const EdgeInsets.all(8)
+                  : widget.padding ?? const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.all(
                   Radius.circular(widget.borderRadius ?? 5),
                 ),
                 borderSide: BorderSide(
                   width: 1,
-                  color: Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 218, 218, 218) : const Color.fromARGB(255, 177, 177, 177),
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? const Color.fromARGB(255, 218, 218, 218)
+                      : const Color.fromARGB(255, 177, 177, 177),
                 ),
               ),
               border: OutlineInputBorder(
@@ -359,7 +378,9 @@ class _CustomTextboxState extends State<CustomTextbox> {
                 ),
                 borderSide: BorderSide(
                   width: 1,
-                  color: Theme.of(context).brightness == Brightness.dark ? Color.fromARGB(255, 218, 218, 218) : const Color.fromARGB(255, 126, 126, 126),
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Color.fromARGB(255, 218, 218, 218)
+                      : const Color.fromARGB(255, 126, 126, 126),
                 ),
               ),
               focusedBorder: OutlineInputBorder(
