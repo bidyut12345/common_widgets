@@ -91,6 +91,9 @@ class _CustomDropDownState extends State<CustomDropDown> {
       selectedText = widget.datasource[index][widget.displayMember]?.toString() ?? "";
       widget.controller?.text = selectedText;
       widget.controller?.selectedValue = selectedValue;
+      if (widget.onChanged != null) {
+        widget.onChanged!(selectedValue, selectedText);
+      }
       setState(() {});
     };
     widget.controller?.getSelectedIndex = () {

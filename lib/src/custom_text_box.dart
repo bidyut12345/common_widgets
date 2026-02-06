@@ -13,8 +13,8 @@ class CustomTextbox extends StatefulWidget {
   const CustomTextbox({
     super.key,
     required this.controller,
-    this.labelText = '',
-    this.hintText = '',
+    this.labelText,
+    this.hintText,
     this.keyboardtype = TextInputType.text,
     this.capitalization = TextCapitalization.words,
     this.required = true,
@@ -53,8 +53,8 @@ class CustomTextbox extends StatefulWidget {
   });
 
   final TextEditingController controller;
-  final String labelText;
-  final String hintText;
+  final String? labelText;
+  final String? hintText;
   final TextInputType keyboardtype;
   final TextCapitalization capitalization;
   final bool required;
@@ -134,33 +134,33 @@ class _CustomTextboxState extends State<CustomTextbox> {
   int lastFocus = 0;
   @override
   Widget build(BuildContext context) {
-    var label = RichText(
-      textAlign: TextAlign.left,
-      softWrap: false,
-      text: TextSpan(
-        style: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-          color: Theme.of(context).brightness == Brightness.dark
-              ? const Color.fromARGB(255, 209, 209, 209)
-              : const Color.fromARGB(255, 86, 86, 86),
-          // color: Color.fromARGB(255, 86, 86, 86),
-        ),
-        children: [
-          TextSpan(
-            text: widget.labelText,
-          ),
-          TextSpan(
-            text: widget.required ? " *" : "",
-            style: TextStyle(
-              color: Colors.red[700],
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
+    var label = widget.labelText == null
+        ? null
+        : RichText(
+            textAlign: TextAlign.left,
+            softWrap: false,
+            text: TextSpan(
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 209, 209, 209) : const Color.fromARGB(255, 86, 86, 86),
+                // color: Color.fromARGB(255, 86, 86, 86),
+              ),
+              children: [
+                TextSpan(
+                  text: widget.labelText,
+                ),
+                TextSpan(
+                  text: widget.required ? " *" : "",
+                  style: TextStyle(
+                    color: Colors.red[700],
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+              ],
             ),
-          )
-        ],
-      ),
-    );
+          );
     // focusNode: fc,
     // onKeyEvent: (value) {
     //   if (value is KeyDownEvent) {
@@ -241,8 +241,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
               // if (widget.isNumber) FilteringTextInputFormatter.digitsOnly,
               if (widget.isNumber) FilteringTextInputFormatter.allow(RegExp(r'[0-9.-]')),
               if (widget.isNumber)
-                TextInputFormatter.withFunction((oldValue, newValue) =>
-                    newValue.text.isEmpty || double.tryParse(newValue.text) != null ? newValue : oldValue),
+                TextInputFormatter.withFunction((oldValue, newValue) => newValue.text.isEmpty || double.tryParse(newValue.text) != null ? newValue : oldValue),
             ],
             onChanged: (value) {
               if (widget.onChanged != null) widget.onChanged!(value);
@@ -271,18 +270,13 @@ class _CustomTextboxState extends State<CustomTextbox> {
             textCapitalization: widget.capitalization,
             style: TextStyle(
                 fontSize: widget.fontSize,
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? const Color.fromARGB(255, 218, 218, 218)
-                    : const Color.fromARGB(255, 71, 71, 71),
+                color: Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 218, 218, 218) : const Color.fromARGB(255, 71, 71, 71),
                 fontWeight: widget.fontWeight),
             decoration: InputDecoration(
               isDense: widget.compact,
-              suffixIconConstraints: widget.keyboardtype == TextInputType.datetime
-                  ? const BoxConstraints(maxHeight: 35, maxWidth: 45)
-                  : null,
+              suffixIconConstraints: widget.keyboardtype == TextInputType.datetime ? const BoxConstraints(maxHeight: 35, maxWidth: 45) : null,
               label: widget.showFloatingLabel ? label : null,
-              floatingLabelBehavior:
-                  widget.alwaysShowFloatingLabel ? FloatingLabelBehavior.always : FloatingLabelBehavior.auto,
+              floatingLabelBehavior: widget.alwaysShowFloatingLabel ? FloatingLabelBehavior.always : FloatingLabelBehavior.auto,
               prefixIcon: widget.prefixIcon,
               suffixIcon: widget.suffixIcon ??
                   (widget.keyboardtype == TextInputType.datetime
@@ -296,8 +290,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
                                 color: Colors.blue,
                                 size: 20,
                               ),
-                              style: IconButton.styleFrom(
-                                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
+                              style: IconButton.styleFrom(shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
                               onPressed: () {
                                 if (widget.disableSuffixButtonClick) return;
                                 var dt = DateTime.now();
@@ -347,29 +340,20 @@ class _CustomTextboxState extends State<CustomTextbox> {
               hintStyle: const TextStyle(color: Color.fromARGB(255, 108, 108, 108)),
               fillColor: widget.readOnly
                   ? (widget.backgroundColor ??
-                      (Theme.of(context).brightness == Brightness.dark
-                          ? const Color.fromARGB(255, 99, 99, 99)
-                          : const Color.fromARGB(255, 241, 241, 241)))
+                      (Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 99, 99, 99) : const Color.fromARGB(255, 241, 241, 241)))
                   : widget.enabled
-                      ? (widget.backgroundColor ??
-                          (Theme.of(context).brightness == Brightness.dark
-                              ? const Color.fromARGB(255, 69, 69, 69)
-                              : Colors.white))
+                      ? (widget.backgroundColor ?? (Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 69, 69, 69) : Colors.white))
                       : Colors.grey,
               filled: true,
               isCollapsed: true,
-              contentPadding: widget.compact
-                  ? const EdgeInsets.all(8)
-                  : widget.padding ?? const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+              contentPadding: widget.compact ? const EdgeInsets.all(8) : widget.padding ?? const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.all(
                   Radius.circular(widget.borderRadius ?? 5),
                 ),
                 borderSide: BorderSide(
                   width: 1,
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? const Color.fromARGB(255, 218, 218, 218)
-                      : const Color.fromARGB(255, 177, 177, 177),
+                  color: Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 218, 218, 218) : const Color.fromARGB(255, 177, 177, 177),
                 ),
               ),
               border: OutlineInputBorder(
@@ -378,9 +362,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
                 ),
                 borderSide: BorderSide(
                   width: 1,
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? Color.fromARGB(255, 218, 218, 218)
-                      : const Color.fromARGB(255, 126, 126, 126),
+                  color: Theme.of(context).brightness == Brightness.dark ? Color.fromARGB(255, 218, 218, 218) : const Color.fromARGB(255, 126, 126, 126),
                 ),
               ),
               focusedBorder: OutlineInputBorder(
