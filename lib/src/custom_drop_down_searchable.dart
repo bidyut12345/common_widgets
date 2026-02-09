@@ -73,27 +73,26 @@ class _CustomDropDownSearchableState extends State<CustomDropDownSearchable> {
 
   @override
   Widget build(BuildContext context) {
-    var tt = TextPainter(
-        text: TextSpan(text: "Ty", style: TextStyle(fontSize: widget.fontSize)), textDirection: TextDirection.ltr)
-      ..layout();
+    var tt = TextPainter(text: TextSpan(text: "Ty", style: TextStyle(fontSize: widget.fontSize)), textDirection: TextDirection.ltr)..layout();
     var padd = widget.padding ??
-        (widget.isMobileView
-            ? const EdgeInsets.symmetric(horizontal: 2, vertical: 12)
-            : const EdgeInsets.symmetric(horizontal: 2, vertical: 7));
+        (widget.isMobileView ? const EdgeInsets.symmetric(horizontal: 2, vertical: 12) : const EdgeInsets.symmetric(horizontal: 2, vertical: 7));
 
     return GestureDetector(
       // behavior: HitTestBehavior.translucent,
-      child: KeyboardListener(
+      child: Focus(
         focusNode: mainKeyBoardListenerFocusNode,
-        onKeyEvent: (value) {
-          if (value is KeyUpEvent) {
+        onKey: (node, value) {
+          if (value is KeyDownEvent) {
             print(value);
             if (value.physicalKey == PhysicalKeyboardKey.tab) {
               mainFn.nextFocus();
+              return KeyEventResult.handled;
             } else if (value.physicalKey != PhysicalKeyboardKey.escape) {
               openWindow();
+              return KeyEventResult.handled;
             }
           }
+          return KeyEventResult.ignored;
         },
         child: Focus(
           focusNode: mainFn,
@@ -116,9 +115,7 @@ class _CustomDropDownSearchableState extends State<CustomDropDownSearchable> {
               bottom: max(padd.bottom - 2, 0),
             ),
             decoration: BoxDecoration(
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? const Color.fromARGB(255, 69, 69, 69)
-                  : Colors.white,
+              color: Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 69, 69, 69) : Colors.white,
               borderRadius: BorderRadius.circular(widget.borderRadius ?? 5),
               border: Border.all(
                 width: isFocused ? 1 : 0.1,
@@ -158,16 +155,13 @@ class _CustomDropDownSearchableState extends State<CustomDropDownSearchable> {
     var sc = ItemScrollController();
     final RenderBox itemBox = context.findRenderObject()! as RenderBox;
     itemRect.value = itemBox.localToGlobal(Offset.zero, ancestor: Navigator.of(context).context.findRenderObject()) &
-        Size(itemBox.size.width,
-            (Navigator.of(context).context.findRenderObject()! as RenderBox).size.height); //(-98, 90)
+        Size(itemBox.size.width, (Navigator.of(context).context.findRenderObject()! as RenderBox).size.height); //(-98, 90)
     isDialogShown = true;
     String lastSearchText = "";
     filteredDataSource = widget.dataSource;
 
     var padd = widget.padding ??
-        (widget.isMobileView
-            ? const EdgeInsets.symmetric(horizontal: 2, vertical: 12)
-            : const EdgeInsets.symmetric(horizontal: 2, vertical: 7));
+        (widget.isMobileView ? const EdgeInsets.symmetric(horizontal: 2, vertical: 12) : const EdgeInsets.symmetric(horizontal: 2, vertical: 7));
     if (selectedValue != null) {
       selectedIndex = filteredDataSource.indexWhere((element) => element[widget.valueMember] == selectedValue);
       Future.delayed(const Duration(milliseconds: 100), () {
@@ -211,10 +205,7 @@ class _CustomDropDownSearchableState extends State<CustomDropDownSearchable> {
             } else {
               if (widget.searchBuilder == null) {
                 filteredDataSource = widget.dataSource
-                    .where((element) => element[widget.displayMember]
-                        .toString()
-                        .toLowerCase()
-                        .contains(textController.text.trim().toLowerCase()))
+                    .where((element) => element[widget.displayMember].toString().toLowerCase().contains(textController.text.trim().toLowerCase()))
                     .toList();
               } else {
                 filteredDataSource = widget.searchBuilder!(textController.text);
@@ -252,9 +243,9 @@ class _CustomDropDownSearchableState extends State<CustomDropDownSearchable> {
               }
               return StatefulBuilder(
                 builder: (BuildContext contextstf, setState) {
-                  var dialogContent = KeyboardListener(
+                  var dialogContent = Focus(
                     focusNode: itemsKeyboardListenerFocusNode,
-                    onKeyEvent: (value) {
+                    onKey: (node, value) {
                       if (value is KeyDownEvent) {
                         if (value.physicalKey == PhysicalKeyboardKey.tab) {
                           tabPress = true;
@@ -262,11 +253,13 @@ class _CustomDropDownSearchableState extends State<CustomDropDownSearchable> {
                           tabPress = false;
                         }
                       }
-                      if (value is KeyUpEvent) {
+                      if (value is KeyDownEvent) {
                         if (value.physicalKey == PhysicalKeyboardKey.tab && tabPress) {
                           Navigator.pop(contextdlg);
+                          return KeyEventResult.handled;
                         } else if (value.physicalKey == PhysicalKeyboardKey.escape) {
                           Navigator.pop(contextdlg);
+                          return KeyEventResult.handled;
                         } else if (value.physicalKey == PhysicalKeyboardKey.arrowDown) {
                           selectedIndex += 1;
                           if (selectedIndex >= filteredDataSource.length) {
@@ -283,6 +276,7 @@ class _CustomDropDownSearchableState extends State<CustomDropDownSearchable> {
                               milliseconds: 500,
                             ),
                           );
+                          return KeyEventResult.handled;
                         } else if (value.physicalKey == PhysicalKeyboardKey.arrowUp) {
                           selectedIndex -= 1;
                           if (selectedIndex < 0) {
@@ -299,16 +293,20 @@ class _CustomDropDownSearchableState extends State<CustomDropDownSearchable> {
                               milliseconds: 500,
                             ),
                           );
+                          return KeyEventResult.handled;
                         } else if (value.physicalKey == PhysicalKeyboardKey.enter) {
                           Navigator.pop(contextdlg, filteredDataSource[selectedIndex]);
+                          return KeyEventResult.handled;
                         } else {
                           search();
 
                           setState(
                             () {},
                           );
+                          return KeyEventResult.ignored;
                         }
                       }
+                      return KeyEventResult.ignored;
                     },
                     child: Container(
                       padding: const EdgeInsets.all(10),
@@ -343,9 +341,7 @@ class _CustomDropDownSearchableState extends State<CustomDropDownSearchable> {
                               padding: const EdgeInsets.symmetric(vertical: 5),
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Theme.of(contextdlg).brightness == Brightness.dark
-                                      ? const Color.fromARGB(255, 69, 69, 69)
-                                      : Colors.white,
+                                  color: Theme.of(contextdlg).brightness == Brightness.dark ? const Color.fromARGB(255, 69, 69, 69) : Colors.white,
                                   borderRadius: BorderRadius.circular(5),
                                   border: Border.all(
                                     width: 0.1,
@@ -366,9 +362,8 @@ class _CustomDropDownSearchableState extends State<CustomDropDownSearchable> {
                                       key: GlobalObjectKey("$keystr${index - 1}"),
                                       style: TextButton.styleFrom(
                                           padding: const EdgeInsets.symmetric(horizontal: 5),
-                                          foregroundColor: ThemeHelper.isDarkMode(contextdlg)
-                                              ? Color.fromARGB(255, 221, 221, 221)
-                                              : Color.fromARGB(255, 39, 39, 39),
+                                          foregroundColor:
+                                              ThemeHelper.isDarkMode(contextdlg) ? Color.fromARGB(255, 221, 221, 221) : Color.fromARGB(255, 39, 39, 39),
                                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
                                           backgroundColor: index - 1 == selectedIndex
                                               ? Colors.red
@@ -420,8 +415,7 @@ class _CustomDropDownSearchableState extends State<CustomDropDownSearchable> {
                               top: (itemRect.value?.top ?? 0) - 10,
                               left: (itemRect.value?.left ?? 0) - 10,
                               child: Container(
-                                constraints: BoxConstraints(
-                                    maxHeight: (itemRect.value?.height ?? 0) - ((itemRect.value?.top ?? 0))),
+                                constraints: BoxConstraints(maxHeight: (itemRect.value?.height ?? 0) - ((itemRect.value?.top ?? 0))),
                                 child: dialogContent,
                               ),
                             );
