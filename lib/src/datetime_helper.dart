@@ -2,22 +2,11 @@
 /// Supported tokens: yyyy, yy, MMMM, MMM, MM, M, dd, d, HH, H, hh, h, mm, m, ss, s, SSS, a
 library;
 
-const List<String> _monthFull = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December'
-];
+import 'dart:math';
 
-final List<String> _monthShort = _monthFull.map((m) => m.substring(0, 3)).toList();
+const List<String> _monthFull = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+final List<String> _monthShort = _monthFull.map((m) => m.substring(0, min(3, m.length))).toList();
 
 String _pad(int value, int width) => value.toString().padLeft(width, '0');
 

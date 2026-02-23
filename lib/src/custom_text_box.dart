@@ -1,3 +1,4 @@
+import 'package:common_widgets/common_widgets.dart';
 import 'package:common_widgets/src/input_formatters/uppercase_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -36,6 +37,7 @@ class CustomTextbox extends StatefulWidget {
     this.height,
     this.padding,
     this.backgroundColor,
+    this.foreColor,
     this.borderRadius,
     this.fontSize = 14,
     this.fontWeight = FontWeight.normal,
@@ -79,6 +81,7 @@ class CustomTextbox extends StatefulWidget {
   final bool isNumber;
   final double? height;
   final Color? backgroundColor;
+  final Color? foreColor;
   final EdgeInsets? padding;
   final double? borderRadius;
   final double fontSize;
@@ -134,6 +137,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
   int lastFocus = 0;
   @override
   Widget build(BuildContext context) {
+    var isDarkMode = ThemeHelper.isDarkMode(context);
     var label = widget.labelText == null
         ? null
         : RichText(
@@ -141,9 +145,9 @@ class _CustomTextboxState extends State<CustomTextbox> {
             softWrap: false,
             text: TextSpan(
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 209, 209, 209) : const Color.fromARGB(255, 86, 86, 86),
+                color: isDarkMode ? const Color.fromARGB(255, 209, 209, 209) : const Color.fromARGB(255, 86, 86, 86),
                 // color: Color.fromARGB(255, 86, 86, 86),
               ),
               children: [
@@ -175,6 +179,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
       descendantsAreTraversable: true,
       skipTraversal: true,
       descendantsAreFocusable: widget.focusable,
+      canRequestFocus: false,
       onFocusChange: (value) {
         if (value) {
           // print("Got focus");
@@ -270,7 +275,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
             textCapitalization: widget.capitalization,
             style: TextStyle(
                 fontSize: widget.fontSize,
-                color: Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 218, 218, 218) : const Color.fromARGB(255, 71, 71, 71),
+                color: widget.foreColor ?? (isDarkMode ? const Color.fromARGB(255, 218, 218, 218) : const Color.fromARGB(255, 71, 71, 71)),
                 fontWeight: widget.fontWeight),
             decoration: InputDecoration(
               isDense: widget.compact,
@@ -339,10 +344,9 @@ class _CustomTextboxState extends State<CustomTextbox> {
               hintText: widget.hintText,
               hintStyle: const TextStyle(color: Color.fromARGB(255, 108, 108, 108)),
               fillColor: widget.readOnly
-                  ? (widget.backgroundColor ??
-                      (Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 99, 99, 99) : const Color.fromARGB(255, 241, 241, 241)))
+                  ? (widget.backgroundColor ?? (isDarkMode ? const Color.fromARGB(255, 99, 99, 99) : const Color.fromARGB(255, 241, 241, 241)))
                   : widget.enabled
-                      ? (widget.backgroundColor ?? (Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 69, 69, 69) : Colors.white))
+                      ? (widget.backgroundColor ?? (isDarkMode ? const Color.fromARGB(255, 69, 69, 69) : Colors.white))
                       : Colors.grey,
               filled: true,
               isCollapsed: true,
@@ -353,7 +357,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
                 ),
                 borderSide: BorderSide(
                   width: 1,
-                  color: Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 218, 218, 218) : const Color.fromARGB(255, 177, 177, 177),
+                  color: isDarkMode ? const Color.fromARGB(255, 218, 218, 218) : const Color.fromARGB(255, 177, 177, 177),
                 ),
               ),
               border: OutlineInputBorder(
@@ -362,7 +366,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
                 ),
                 borderSide: BorderSide(
                   width: 1,
-                  color: Theme.of(context).brightness == Brightness.dark ? Color.fromARGB(255, 218, 218, 218) : const Color.fromARGB(255, 126, 126, 126),
+                  color: isDarkMode ? Color.fromARGB(255, 218, 218, 218) : const Color.fromARGB(255, 126, 126, 126),
                 ),
               ),
               focusedBorder: OutlineInputBorder(
