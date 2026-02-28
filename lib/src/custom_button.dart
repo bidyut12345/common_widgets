@@ -5,7 +5,7 @@ enum IconTextAlignment { beforeText, afterText, aboveText, belowText }
 
 enum ButtomStyleType { yes, ok, cancel, normal }
 
-class CustomButton extends StatelessWidget {
+class CustomButton extends StatefulWidget {
   // static ButtonStyle Function(BuildContext context, ButtomStyleType buttonStyleType,
   //         {EdgeInsets? padding,
   //         Color? backcolor,
@@ -80,6 +80,7 @@ class CustomButton extends StatelessWidget {
   final IconTextAlignment iconAlignment;
 
   final Color? focusColor;
+  final FocusNode? focusNode;
 
   // final Color color;
   const CustomButton(
@@ -99,26 +100,42 @@ class CustomButton extends StatelessWidget {
       this.icon,
       this.iconTextGap = 5,
       this.iconAlignment = IconTextAlignment.beforeText,
-      this.focusColor})
+      this.focusColor,
+      this.focusNode})
       : super(key: key);
 
   @override
+  State<CustomButton> createState() => _CustomButtonState();
+}
+
+class _CustomButtonState extends State<CustomButton> {
+  @override
   Widget build(BuildContext context) {
     var isDarkMode = ThemeHelper.isDarkMode(context);
+    var focusNode_ = widget.focusNode ?? FocusNode();
+    var statesController = WidgetStatesController();
     return Padding(
-      padding: margin,
+      padding: widget.margin,
       child: SizedBox(
-        height: height,
-        width: width,
+        height: widget.height,
+        width: widget.width,
         child: ElevatedButton(
-          onPressed: onPressed,
+          focusNode: focusNode_,
+          onPressed: () {
+            focusNode_.requestFocus();
+            // statesController.update(WidgetState.focused, true);
+            widget.onPressed();
+          },
+          onFocusChange: (value) {
+            // statesController.update(WidgetState.focused, value);
+          },
+          statesController: statesController,
           style: ElevatedButton.styleFrom(
-            padding: padding,
-            backgroundColor: backcolor ??
-                (Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 53, 56, 82) : const Color.fromARGB(255, 128, 136, 214)),
+            padding: widget.padding,
+            backgroundColor: widget.backcolor ?? (isDarkMode ? const Color.fromARGB(255, 53, 56, 82) : const Color.fromARGB(255, 128, 136, 214)),
             // minimumSize: const Size(double.infinity, 10),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius)),
-            alignment: alignment,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(widget.radius)),
+            alignment: widget.alignment,
           ).copyWith(
             side: WidgetStateProperty.resolveWith((states) {
               if (states.contains(WidgetState.focused)) {
@@ -128,7 +145,7 @@ class CustomButton extends StatelessWidget {
             }),
             shadowColor: WidgetStateProperty.resolveWith((states) {
               if (states.contains(WidgetState.focused)) {
-                return isDarkMode ? focusColor ?? Colors.white : focusColor ?? Colors.white;
+                return isDarkMode ? widget.focusColor ?? Colors.white : widget.focusColor ?? Colors.white;
               }
               return null;
             }),
@@ -139,34 +156,34 @@ class CustomButton extends StatelessWidget {
               return null;
             }),
           ),
-          child: child ??
+          child: widget.child ??
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (icon != null) ...[
-                    icon!,
+                  if (widget.icon != null) ...[
+                    widget.icon!,
                     SizedBox(
-                      width: iconTextGap,
+                      width: widget.iconTextGap,
                     ),
                   ],
                   Flexible(
                     child: Text(
-                      text,
+                      widget.text,
                       softWrap: true,
                       style: TextStyle(
-                        color: forecolor ?? (Theme.of(context).brightness == Brightness.dark ? Colors.white : Color.fromARGB(255, 228, 228, 228)),
-                        fontSize: fontSize,
+                        color: widget.forecolor ?? (Theme.of(context).brightness == Brightness.dark ? Colors.white : Color.fromARGB(255, 228, 228, 228)),
+                        fontSize: widget.fontSize,
                       ),
-                      textAlign: [Alignment.topLeft, Alignment.bottomLeft, Alignment.centerLeft].contains(alignment)
+                      textAlign: [Alignment.topLeft, Alignment.bottomLeft, Alignment.centerLeft].contains(widget.alignment)
                           ? TextAlign.left
-                          : [Alignment.center, Alignment.topCenter, Alignment.bottomCenter].contains(alignment)
+                          : [Alignment.center, Alignment.topCenter, Alignment.bottomCenter].contains(widget.alignment)
                               ? TextAlign.center
                               : TextAlign.right,
                     ),
                   ),
-                  if (icon != null) ...[
+                  if (widget.icon != null) ...[
                     const SizedBox(width: 5),
                   ],
                 ],

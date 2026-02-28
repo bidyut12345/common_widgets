@@ -238,7 +238,9 @@ class _CustomTextboxState extends State<CustomTextbox> {
                     : TextInputAction.none,
             obscureText: widget.obsecureText,
             onFieldSubmitted: (value) {
-              if (widget.onSubmitted != null) widget.onSubmitted!(value, fc);
+              if (widget.onSubmitted != null) {
+                widget.onSubmitted!(value, fc);
+              }
             },
             inputFormatters: [
               if (widget.isMoneyFormatter) MoneyTextInputFormatter(),
@@ -380,7 +382,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
               ),
             ),
           ),
-          if (!widget.compact) SizedBox(height: widget.endPadding),
+          SizedBox(height: widget.endPadding),
         ],
       ),
     );
