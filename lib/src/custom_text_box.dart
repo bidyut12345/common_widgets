@@ -203,6 +203,14 @@ class _CustomTextboxState extends State<CustomTextbox> {
           downKey = value.physicalKey;
           if (widget.keyPress != null) return widget.keyPress!(value.physicalKey, fc);
         }
+        // if (value is KeyUpEvent) {
+        //   if (value.physicalKey == PhysicalKeyboardKey.tab) {
+        //     fc.nextFocus();
+        //     return KeyEventResult.handled;
+        //   }
+        //   // downKey = value.physicalKey;
+        //   // if (widget.keyPress != null) return widget.keyPress!(value.physicalKey, fc);
+        // }
         // if (value is KeyUpEvent && downKey == value.physicalKey) {}
         return KeyEventResult.ignored;
       },
