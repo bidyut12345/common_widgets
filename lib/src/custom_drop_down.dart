@@ -47,6 +47,7 @@ class CustomDropDown extends StatefulWidget {
     this.wrongValues,
     this.multiSelect = false,
     this.fontSize = 14,
+    this.labelFontSize = 12,
     this.onEnterPressed,
   });
 
@@ -63,6 +64,7 @@ class CustomDropDown extends StatefulWidget {
   final double endPadding;
   final bool multiSelect;
   final double fontSize;
+  final double labelFontSize;
   final Function()? onEnterPressed;
 
   final Function(String value, String text)? onChanged;
@@ -190,7 +192,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
               textAlign: TextAlign.left,
               text: TextSpan(
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: widget.labelFontSize,
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).brightness == Brightness.dark ? const Color.fromARGB(255, 209, 209, 209) : const Color.fromARGB(255, 86, 86, 86),
                 ),
@@ -202,7 +204,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
                     text: widget.required ? " *" : "",
                     style: TextStyle(
                       color: Colors.red[700],
-                      fontSize: 14,
+                      fontSize: widget.labelFontSize + 2,
                       fontWeight: FontWeight.bold,
                     ),
                   )

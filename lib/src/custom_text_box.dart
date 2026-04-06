@@ -52,6 +52,7 @@ class CustomTextbox extends StatefulWidget {
     this.focusable = true,
     this.compact = false,
     this.keyPress,
+    this.labelFontSize = 12,
   });
 
   final TextEditingController controller;
@@ -87,6 +88,7 @@ class CustomTextbox extends StatefulWidget {
   final double fontSize;
   final FontWeight fontWeight;
   final FocusNode? focusNode;
+  final double labelFontSize;
   final bool compact;
   final Function(String value)? onChanged;
   final Function(String value, FocusNode fn, TextEditingController tc)? onFocusleave;
@@ -145,7 +147,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
             softWrap: false,
             text: TextSpan(
               style: TextStyle(
-                fontSize: 16,
+                fontSize: widget.labelFontSize,
                 fontWeight: FontWeight.bold,
                 color: isDarkMode ? const Color.fromARGB(255, 209, 209, 209) : const Color.fromARGB(255, 86, 86, 86),
                 // color: Color.fromARGB(255, 86, 86, 86),
@@ -158,7 +160,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
                   text: widget.required ? " *" : "",
                   style: TextStyle(
                     color: Colors.red[700],
-                    fontSize: 14,
+                    fontSize: widget.labelFontSize + 2,
                     fontWeight: FontWeight.bold,
                   ),
                 )
