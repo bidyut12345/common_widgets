@@ -28,8 +28,8 @@ class _ScaleContainerState extends State<ScaleContainer> {
                           )
                         : EdgeInsets.zero,
                     child: FractionallySizedBox(
-                      widthFactor: 1 / widget.appScale,
-                      heightFactor: 1 / widget.appScale,
+                      widthFactor: 1.0 / widget.appScale,
+                      heightFactor: 1.0 / widget.appScale,
                       child: Transform.scale(
                         scale: widget.appScale,
                         child: LayoutBuilder(
