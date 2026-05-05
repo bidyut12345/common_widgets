@@ -413,7 +413,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
                           "";
 
                   if (widget.controller != null) {
-                    if (selectedValue != widget.controller!.selectedValue && widget.controller!.selectedValue.isNotEmpty) {
+                    if (selectedValue != widget.controller!.selectedValue && widget.controller!.selectedValue.toString().isNotEmpty) {
                       widget.controller!.text = selectedText;
                       widget.controller!.selectedValue = selectedValue;
                     }
