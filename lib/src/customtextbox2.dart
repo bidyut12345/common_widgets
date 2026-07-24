@@ -235,9 +235,9 @@ class _CustomTextbox2State extends State<CustomTextbox2> {
             : null);
 
     Color bgColor = widget.readOnly
-        ? (widget.backgroundColor ?? (isDarkMode ? const Color.fromARGB(255, 99, 99, 99) : const Color.fromARGB(255, 241, 241, 241)))
+        ? (widget.backgroundColor ?? (isDarkMode ? const Color.fromARGB(255, 53, 53, 53) : const Color.fromARGB(255, 241, 241, 241)))
         : widget.enabled
-            ? (widget.backgroundColor ?? (isDarkMode ? const Color.fromARGB(255, 69, 69, 69) : Colors.white))
+            ? (widget.backgroundColor ?? (isDarkMode ? const Color.fromARGB(255, 53, 53, 53) : Colors.white))
             : Colors.grey;
     return Focus(
       // focusNode: fcParent,
@@ -321,7 +321,7 @@ class _CustomTextbox2State extends State<CustomTextbox2> {
                           )
                         : Border.all(
                             width: 1,
-                            color: isDarkMode ? Color.fromARGB(255, 218, 218, 218) : const Color.fromARGB(255, 126, 126, 126),
+                            color: isDarkMode ? Color.fromARGB(255, 148, 148, 148) : const Color.fromARGB(255, 126, 126, 126),
                           ),
                   ),
                   child: Row(
@@ -391,7 +391,7 @@ class _CustomTextbox2State extends State<CustomTextbox2> {
                             // prefixIcon: widget.prefixIcon,
                             // suffixIcon: suffixWidget,
                             hintText: widget.hintText,
-                            hintStyle: const TextStyle(color: Color.fromARGB(255, 108, 108, 108)),
+                            hintStyle: TextStyle(color: isDarkMode ? const Color.fromARGB(255, 178, 178, 178) : Color.fromARGB(255, 108, 108, 108)),
                             fillColor: Colors.transparent,
                             filled: true,
                             focusColor: Colors.transparent,

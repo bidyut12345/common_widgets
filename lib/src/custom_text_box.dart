@@ -354,11 +354,11 @@ class _CustomTextboxState extends State<CustomTextbox> {
                         )
                       : null),
               hintText: widget.hintText,
-              hintStyle: const TextStyle(color: Color.fromARGB(255, 108, 108, 108)),
+              hintStyle: TextStyle(color: isDarkMode ? const Color.fromARGB(255, 178, 178, 178) : Color.fromARGB(255, 108, 108, 108)),
               fillColor: widget.readOnly
-                  ? (widget.backgroundColor ?? (isDarkMode ? const Color.fromARGB(255, 99, 99, 99) : const Color.fromARGB(255, 241, 241, 241)))
+                  ? (widget.backgroundColor ?? (isDarkMode ? const Color.fromARGB(255, 53, 53, 53) : const Color.fromARGB(255, 241, 241, 241)))
                   : widget.enabled
-                      ? (widget.backgroundColor ?? (isDarkMode ? const Color.fromARGB(255, 69, 69, 69) : Colors.white))
+                      ? (widget.backgroundColor ?? (isDarkMode ? const Color.fromARGB(255, 49, 49, 49) : Colors.white))
                       : Colors.grey,
               filled: true,
               isCollapsed: true,
@@ -369,7 +369,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
                 ),
                 borderSide: BorderSide(
                   width: 1,
-                  color: isDarkMode ? const Color.fromARGB(255, 218, 218, 218) : const Color.fromARGB(255, 177, 177, 177),
+                  color: isDarkMode ? const Color.fromARGB(255, 148, 148, 148) : const Color.fromARGB(255, 177, 177, 177),
                 ),
               ),
               border: OutlineInputBorder(
@@ -378,7 +378,7 @@ class _CustomTextboxState extends State<CustomTextbox> {
                 ),
                 borderSide: BorderSide(
                   width: 1,
-                  color: isDarkMode ? Color.fromARGB(255, 218, 218, 218) : const Color.fromARGB(255, 126, 126, 126),
+                  color: isDarkMode ? Color.fromARGB(255, 148, 148, 148) : const Color.fromARGB(255, 126, 126, 126),
                 ),
               ),
               focusedBorder: OutlineInputBorder(
