@@ -4,15 +4,34 @@ import 'package:flutter/material.dart';
 class MsgBoxGlobalConfigs {
   static ButtonStyle Function(BuildContext context) okButtonStyle = (context) {
     var isDarkMode_ = ThemeHelper.isDarkMode(context);
+    var primaryColor = Theme.of(context).primaryColor;
     return ElevatedButton.styleFrom(
-      foregroundColor: isDarkMode_ ? Colors.white : Colors.black,
+      backgroundColor: primaryColor,
+      foregroundColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      elevation: 1,
     );
   };
 
-  static ButtonStyle Function(BuildContext context, String buttonText) confirmButtonStyle = (context, buttonText) {
+  static ButtonStyle Function(BuildContext context, String buttonText, {bool isPrimary}) confirmButtonStyle =
+      (context, buttonText, {bool isPrimary = false}) {
     var isDarkMode_ = ThemeHelper.isDarkMode(context);
-    return ElevatedButton.styleFrom(
-      foregroundColor: isDarkMode_ ? Colors.white : Colors.black,
+    var primaryColor = Theme.of(context).primaryColor;
+    if (isPrimary) {
+      return ElevatedButton.styleFrom(
+        backgroundColor: primaryColor,
+        foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        elevation: 1,
+      );
+    }
+    return OutlinedButton.styleFrom(
+      foregroundColor: isDarkMode_ ? Colors.white70 : Colors.black87,
+      side: BorderSide(color: isDarkMode_ ? Colors.white30 : Colors.black26),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
     );
   };
 }
@@ -31,94 +50,151 @@ Future showConfirmMessageBox(
   String defaultButton = "Yes",
 }) async {
   var isDarkMode_ = ThemeHelper.isDarkMode(context);
-  // print(CommonWidgetConfig.appBrightnes);
+  var theme = Theme.of(context);
+  var primaryColor = theme.primaryColor;
+
   return showDialog(
       context: context,
       useRootNavigator: false,
       builder: (cntxt) {
-        return AlertDialog(
-          scrollable: true,
-          clipBehavior: Clip.antiAlias,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-          // icon: Icon(
-          //   icon,
-          //   size: 50,
-          // ),
-          // backgroundColor: Colors.redAccent,
-          backgroundColor: isDarkMode_ ? Color.fromARGB(255, 36, 36, 36) : Color.fromARGB(255, 172, 172, 172),
+        bool isButton1Primary = defaultButton == button1;
+        bool isButton2Primary = defaultButton == button2;
+        bool isButton3Primary = defaultButton == button3;
 
-          actionsAlignment: MainAxisAlignment.center,
-          actionsPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          actions: [
-            ElevatedButton(
-              autofocus: defaultButton == button1,
+        Widget buildButton({
+          required String label,
+          required bool isPrimary,
+          required bool isAutofocus,
+          ButtonStyle? customStyle,
+        }) {
+          final style = customStyle ?? MsgBoxGlobalConfigs.confirmButtonStyle(context, label, isPrimary: isPrimary);
+
+          if (isPrimary || customStyle != null) {
+            return ElevatedButton(
+              autofocus: isAutofocus,
               onPressed: () {
-                Navigator.pop(context, button1);
+                Navigator.pop(cntxt, label);
               },
-              style: button1Style ?? MsgBoxGlobalConfigs.confirmButtonStyle(context, button1),
+              style: style,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(button1),
+                padding: const EdgeInsets.all(4.0),
+                child: Text(
+                  label,
+                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                ),
               ),
-            ),
-            ElevatedButton(
-              autofocus: defaultButton == button2,
+            );
+          } else {
+            return OutlinedButton(
+              autofocus: isAutofocus,
               onPressed: () {
-                Navigator.pop(context, button2);
+                Navigator.pop(cntxt, label);
               },
-              style: button2Style ?? MsgBoxGlobalConfigs.confirmButtonStyle(context, button2),
+              style: style,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(button2),
+                padding: const EdgeInsets.all(4.0),
+                child: Text(
+                  label,
+                  style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                ),
               ),
+            );
+          }
+        }
+
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side: BorderSide(
+              color: isDarkMode_ ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.08),
+              width: 1,
             ),
-            if (button3.isNotEmpty) ...[
-              ElevatedButton(
-                autofocus: defaultButton == button3,
-                onPressed: () {
-                  Navigator.pop(context, button3);
-                },
-                style: button3Style ?? MsgBoxGlobalConfigs.confirmButtonStyle(context, button3),
-                child: Text(button3),
-              )
-            ],
-            // const SizedBox(width: 20),
-          ],
-          contentPadding: EdgeInsets.zero,
-          content: Container(
-            color: isDarkMode_ ? Colors.black45 : Colors.white54,
+          ),
+          backgroundColor: isDarkMode_ ? const Color(0xFF242731) : Colors.white,
+          elevation: 12,
+          shadowColor: Colors.black.withValues(alpha: 0.3),
+          clipBehavior: Clip.antiAlias,
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 420),
+            padding: const EdgeInsets.all(24),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                if (title.isNotEmpty) ...[
-                  Container(
-                    color: isDarkMode_ ? const Color.fromARGB(255, 78, 78, 78) : Color.fromARGB(255, 107, 107, 107),
-                    alignment: Alignment.center,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            title,
-                            // textScaleFactor: 1.5,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: isDarkMode_ ? Colors.white : Colors.black),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                // Top Icon Badge
                 Container(
-                  padding: const EdgeInsets.all(10),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                    child: Text(
-                      message,
-                      textAlign: TextAlign.center,
-                      textScaleFactor: 1.5,
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: primaryColor.withValues(alpha: isDarkMode_ ? 0.2 : 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    icon,
+                    size: 28,
+                    color: isDarkMode_ ? Color.lerp(primaryColor, Colors.white, 0.3) : primaryColor,
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Title
+                if (title.isNotEmpty) ...[
+                  Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: isDarkMode_ ? Colors.white : Colors.black87,
+                      letterSpacing: -0.2,
                     ),
                   ),
+                  const SizedBox(height: 10),
+                ],
+
+                // Message
+                Text(
+                  message,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 15,
+                    height: 1.4,
+                    color: isDarkMode_ ? Colors.white70 : Colors.black.withValues(alpha: 0.75),
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Actions Row
+                Row(
+                  children: [
+                    if (button3.isNotEmpty) ...[
+                      Expanded(
+                        child: buildButton(
+                          label: button3,
+                          isPrimary: isButton3Primary,
+                          isAutofocus: defaultButton == button3,
+                          customStyle: button3Style,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                    ],
+                    Expanded(
+                      child: buildButton(
+                        label: button2,
+                        isPrimary: isButton2Primary,
+                        isAutofocus: defaultButton == button2,
+                        customStyle: button2Style,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: buildButton(
+                        label: button1,
+                        isPrimary: isButton1Primary,
+                        isAutofocus: defaultButton == button1,
+                        customStyle: button1Style,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
